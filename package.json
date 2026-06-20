@@ -1,5 +1,5 @@
 {
-  "name": "portefolio",
+  "name": "portfolio",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -12,6 +12,23 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^6.4.6"
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "^3.7.3",
+    "@astrojs/solid-js": "^6.0.1",
+    "@unocss/astro": "^66.7.2",
+    "astro": "^6.4.6",
+    "fuse.js": "^7.4.2",
+    "solid-js": "^1.9.13"
+  },
+  "devDependencies": {
+    "@iconify-json/academicons": "^1.2.4",
+    "@iconify-json/eva": "^1.2.3",
+    "@iconify-json/ion": "^1.2.7",
+    "@iconify-json/lucide": "^1.2.113",
+    "@iconify-json/radix-icons": "^1.2.6",
+    "@iconify-json/solar": "^1.2.5",
+    "@iconify-json/uil": "^1.2.3",
+    "@unocss/reset": "^66.7.2",
+    "unocss": "^66.7.2"
   }
 }

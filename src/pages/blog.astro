@@ -1,0 +1,166 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const allPosts = await getCollection('blog');
+
+const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const postsByYear = sortedPosts.reduce((acc, post) => {
+  const year = new Date(post.data.pubDate).getFullYear();
+  if (!acc[year]) acc[year] = [];
+  acc[year].push(post);
+  return acc;
+}, {} as Record<number, typeof sortedPosts>);
+
+const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
+
+const allTags = Array.from(new Set(allPosts.flatMap(post => post.data.tags || []))).sort();
+---
+
+<BaseLayout title="Simon Gardier - Blog" activePage="blog">
+  <div class="max-w-4xl mx-auto py-4">
+    <div class="mb-10 text-center md:text-left">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-fg-dark my-0">Blog Posts</h1>
+    </div>
+
+    <div class="mb-8 font-sans">
+      <div class="flex flex-wrap gap-2 items-center">
+        <span class="i-uil:tag-alt size-4"></span>
+        <button
+          id="tag-filter-all"
+          class="tag-btn active py-1 px-3 text-xs font-semibold rounded-full border border-sky-500/20 bg-sky-500/10 text-sky-600 dark:text-sky-400 cursor-pointer transition-all duration-200"
+        >
+          All Articles [{allPosts.length}]
+        </button>
+        {allTags.map(tag => (
+          <button
+            data-tag={tag}
+            class="tag-btn py-1 px-3 text-xs font-semibold rounded-full border border-border bg-transparent text-fg-light hover:border-fg-light cursor-pointer transition-all duration-200"
+          >
+            {tag}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <div class="space-y-12">
+      {years.map(year => (
+        <div class="year-group" data-year={year}>
+          <div class="flex items-center gap-4 mb-4">
+            <h2 class="text-2xl font-mono font-bold text-fg-dark">{year}</h2>
+            <div class="flex-1 h-px bg-border"></div>
+          </div>
+          
+          <ul class="space-y-6 list-none p-0">
+            {postsByYear[year].map(post => {
+              const formattedDate = new Date(post.data.pubDate).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric'
+              });
+
+              const tagsString = (post.data.tags || []).join(',');
+
+              return (
+                <li 
+                  class="blog-item group transform transition duration-300 py-1" 
+                  data-tags={tagsString}
+                >
+                  <a href={`/blog/${post.id}`} class="block no-underline">
+                    <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-y-1">
+                      <h3 class="text-lg font-bold text-fg-dark group-hover:text-sky-500 transition-colors duration-200 my-0">
+                        {post.data.title}
+                      </h3>
+                      <span class="text-xs font-mono text-fg-light min-w-16 text-right md:-mt-1 md:opacity-75">
+                        {formattedDate}
+                      </span>
+                    </div>
+                    <p class="text-sm text-fg-light line-clamp-2 my-1 leading-relaxed">
+                      {post.data.description}
+                    </p>
+                    <div class="flex flex-wrap gap-1.5 mt-2">
+                       {post.data.tags.map(tag => (
+                        <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-fg-light">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <div id="empty-state" class="hidden text-center py-12 border border-dashed border-border rounded-xl">
+      <span class="i-uil:search text-4xl text-fg-light"></span>
+      <p class="text-fg-light text-sm font-mono mt-3">No match...</p>
+    </div>
+  </div>
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tagButtons = document.querySelectorAll('.tag-btn');
+      const blogItems = document.querySelectorAll('.blog-item');
+      const yearGroups = document.querySelectorAll('.year-group');
+      const emptyState = document.getElementById('empty-state');
+
+      let activeTag = 'all';
+
+      tagButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          // Deactivate former button
+          tagButtons.forEach(b => b.classList.remove('active', 'border-sky-500/20', 'bg-sky-500/10', 'text-sky-600', 'dark:text-sky-400'));
+          tagButtons.forEach(b => {
+            if (!b.classList.contains('active')) {
+              b.classList.add('border-border', 'bg-transparent', 'text-fg-light');
+            }
+          });
+
+          // Activate clicked button
+          button.classList.add('active', 'border-sky-500/20', 'bg-sky-500/10', 'text-sky-600', 'dark:text-sky-400');
+          button.classList.remove('border-border', 'bg-transparent', 'text-fg-light');
+
+          const tag = button.id === 'tag-filter-all' ? 'all' : button.getAttribute('data-tag');
+          activeTag = tag;
+          
+          filterPosts();
+        });
+      });
+
+      function filterPosts() {
+        let totalVisible = 0;
+
+        yearGroups.forEach(group => {
+          let visibleInYear = 0;
+          const itemsInGroup = group.querySelectorAll('.blog-item');
+
+          itemsInGroup.forEach(item => {
+            const tags = item.getAttribute('data-tags').split(',');
+            if (activeTag === 'all' || tags.includes(activeTag)) {
+              item.style.display = 'block';
+              visibleInYear++;
+              totalVisible++;
+            } else {
+              item.style.display = 'none';
+            }
+          });
+
+          if (visibleInYear > 0) {
+            group.style.display = 'block';
+          } else {
+            group.style.display = 'none';
+          }
+        });
+
+        if (totalVisible === 0) {
+          emptyState?.classList.remove('hidden');
+        } else {
+          emptyState?.classList.add('hidden');
+        }
+      }
+    });
+  </script>
+</BaseLayout>

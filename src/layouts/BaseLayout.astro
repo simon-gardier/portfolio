@@ -1,0 +1,80 @@
+---
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  activePage?: string;
+  fullWidth?: boolean;
+}
+
+const {
+  title = "Simon Gardier",
+  description = "Simon Gardier Personal Website",
+  activePage = "home",
+  fullWidth = false
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+
+    <link rel="alternate" type="application/rss+xml" title="Simon Gardier RSS Feed" href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <style is:global>
+      .text-rose-500, .group-hover\:text-rose-500:hover, .hover\:text-rose-500:hover, .text-sky-500, .group-hover\:text-sky-500:hover, .hover\:text-sky-500:hover {
+        color: hsl(200, 95%, 48%) !important;
+      }
+      .bg-rose-500, .hover\:bg-rose-600:hover, .bg-sky-500, .hover\:bg-sky-600:hover {
+        background-color: hsl(200, 95%, 48%) !important;
+      }
+      .border-rose-500\/30, .border-sky-500\/30 {
+        border-color: hsla(200, 90%, 50%, 0.3) !important;
+      }
+      .animate-pulse {
+        animation: pulse 1.2s steps(2, start) infinite;
+      }
+    </style>
+
+    <script is:inline>
+      const checkTheme = () => {
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const setting = localStorage.getItem('theme') || 'auto';
+        const shouldUseDark = setting === 'dark' || (setting !== 'light' && prefersDark);
+        document.documentElement.classList.toggle('dark', shouldUseDark);
+      };
+      checkTheme();
+    </script>
+  </head>
+  <body class="bg-bg text-fg min-h-screen flex flex-col font-sans transition-colors duration-300">
+    <Navbar activePage={activePage} />
+    
+    {fullWidth ? (
+      <div class="flex-1 w-full flex flex-col">
+        {/* Full-width layout for hero wallpaper */}
+        <slot />
+      </div>
+    ) : (
+      <div class="flex-1 w-full max-w-4xl mx-auto px-6 py-8 mt-20">
+        <slot />
+      </div>
+    )}
+
+    <Footer />
+  </body>
+</html>

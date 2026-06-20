@@ -1,0 +1,67 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TableOfContents from '../../components/TableOfContents';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  return sortedPosts.map((post, index) => {
+    // post[index - 1] is a newer post (next), post[index + 1] is an older post (prev)
+    const prevPost = index < sortedPosts.length - 1 ? sortedPosts[index + 1].id : undefined;
+    const nextPost = index > 0 ? sortedPosts[index - 1].id : undefined;
+    
+    return {
+      params: { id: post.id },
+      props: { post, prevPost, nextPost }
+    };
+  });
+}
+
+const { post, prevPost, nextPost } = Astro.props;
+const { Content } = await render(post);
+
+const formattedDate = new Date(post.data.pubDate).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+---
+
+<BaseLayout title={`${post.data.title} - Blog`} activePage="blog">
+  <div class="relative w-full">
+    <TableOfContents client:load prev={prevPost} next={nextPost} />
+    
+    <article class="max-w-2xl mx-auto py-4">
+      <!-- Header -->
+      <header class="mb-8 border-b border-border pb-6">
+        <a href="/blog" class="inline-hstack gap-1.5 text-xs font-mono font-bold text-fg-light hover:text-rose-500 no-underline transition-colors mb-4 cursor-pointer">
+          <span class="i-eva:arrow-back-outline"></span>
+          <span>Back to Blog Posts</span>
+        </a>
+        
+        <h1 class="text-3xl md:text-4xl font-extrabold text-fg-dark my-2 leading-tight">
+          {post.data.title}
+        </h1>
+        
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4 text-xs font-mono text-fg-light">
+          <time datetime={post.data.pubDate.toISOString()}>
+            {formattedDate}
+          </time>
+          <span class="w-1 h-1 rounded-full bg-border"></span>
+          <div class="flex flex-wrap gap-1.5">
+            {post.data.tags.map(tag => (
+              <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      </header>
+
+      <div class="prose prose-neutral dark:prose-invert max-w-none leading-relaxed text-base md:text-lg">
+        <Content />
+      </div>
+    </article>
+  </div>
+</BaseLayout>

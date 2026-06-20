@@ -1,17 +1,143 @@
 ---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HeroContainer from "../components/HeroContainer";
 
+const allPosts = await getCollection("blog");
+const sortedPosts = allPosts.sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const latestPost = sortedPosts[0];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Simon Gardier - Home" activePage="home" fullWidth={true}>
+	<section class="w-full relative z-10">
+		<HeroContainer client:load />
+	</section>
+
+	<main
+		class="w-full max-w-4xl mx-auto px-6 md:px-10 py-12 relative z-20 min-h-screen bg-bg"
+	>
+		<section class="mb-6">
+			<h3 class="text-xl font-bold text-fg-dark m-0">Hello, world!</h3>
+			<p class="text-base md:text-sm leading-relaxed my-2 prose prose-neutral dark:prose-invert">
+				This is the personal website of Simon Gardier.
+			</p>
+		</section>
+
+		<section class="flex flex-wrap gap-3.5 my-6">
+			<a
+				href="/files/cv.pdf"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="btn hstack gap-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-fg-dark px-3 py-1.5 rounded-lg text-xs font-mono no-underline transition-colors"
+			>
+				<span class="i-lucide:rss text-xs text-sky-500"></span>
+				<span>CV</span>
+			</a>
+			<a
+				href="mailto:gardiersimon@gmail.com"
+				class="btn hstack gap-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-fg-dark px-3 py-1.5 rounded-lg text-xs font-mono no-underline transition-colors"
+			>
+				<span class="i-ion:mail-outline text-xs text-sky-500"></span>
+				<span>Email</span>
+			</a>
+			<a
+				href="https://github.com/simon-gardier/"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="btn hstack gap-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-fg-dark px-3 py-1.5 rounded-lg text-xs font-mono no-underline transition-colors"
+			>
+				<span class="i-eva:github-outline text-xs"></span>
+				<span>GitHub</span>
+			</a>
+			<a
+				href="https://scholar.google.com.ni/citations?hl=en&user=OuG3N-EAAAAJ"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="btn hstack gap-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-fg-dark px-3 py-1.5 rounded-lg text-xs font-mono no-underline transition-colors"
+			>
+				<span class="i-academicons:google-scholar text-xs text-sky-500"
+				></span>
+				<span>Scholar</span>
+			</a>
+			<a
+				href="https://www.linkedin.com/in/simon-gardier/"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="btn hstack gap-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-fg-dark px-3 py-1.5 rounded-lg text-xs font-mono no-underline transition-colors"
+			>
+				<span class="i-radix-icons:linkedin-logo text-xs"></span>
+				<span>LinkedIn</span>
+			</a>
+		</section>
+
+		<section
+			class="prose prose-neutral dark:prose-invert max-w-none pt-8 my-8 space-y-4"
+		>
+			<h3 class="text-xl font-bold text-fg-dark m-0">Bio</h3>
+			<p class="leading-relaxed">
+				I received a Bachelor and Master (soon) of Science in <a href="https://www.programmes.uliege.be/cocoon/20252026/en/programmes/A2SSYS02_S.html" rel="noopener noreferrer">Computer Science
+				(finality “Intelligent Systems”)</a> from <a href="https://www.uliege.be/" rel="noopener noreferrer">University of Liège
+				(ULiège)</a> - Belgium. During my studies, I joined <a href="https://42belgium.be/en/" rel="noopener noreferrer">School 42</a> in
+				Brussels. I was part of the <a href="https://robocup.uliege.be/" rel="noopener noreferrer">Robocup team of the Montefiore
+				Institute</a> (ULiège) where I worked on a biped robot, specifically
+				I workded on embedded systems for joint controllers (bootloader design), under the supervision of <a href="https://people.montefiore.uliege.be/boigelot/" rel="noopener noreferrer">Prof. Bernard Boigelot</a>.
+			</p>
+			<p class="leading-relaxed">
+				Previously I interned at <a href="https://www.toyota-europe.com/about-us/toyota-in-europe/toyota-motor-europe" rel="noopener noreferrer">Toyota Motor Europe</a> to work on personalization of <a href="https://arxiv.org/abs/2603.09771" rel="noopener noreferrer">Large Vision
+				Language Models</a> under the supervision of <a href="https://scholar.google.com/citations?user=YLh7yrwAAAAJ&hl=en" rel="noopener noreferrer">Rahaf AlJundi</a> and <a href="https://scholar.google.com/citations?user=JmQOYvQAAAAJ&hl=en" rel="noopener noreferrer">Soroush Seifi</a>. I did my master's thesis at <a href="https://evs.com/eu" rel="noopener noreferrer">EVS Broadcast
+				Equipment</a> on 3D reconstruction and Novel View synthesis using Feed Forward Gaussian
+				Splatting Networks.
+			</p>
+			<p class="leading-relaxed">
+				Currently, I am located in Belgium (Europe).
+				Please checkout my work and blog, and feel free to reach out at
+				<i>gardiersimon at gmail dot com</i> :)
+			</p>
+		</section>
+
+		{
+			latestPost && (
+				<section class="pt-8 my-8 pb-4">
+					<h3 class="text-xl font-bold text-fg-dark tracking-wider mb-4">
+						Latest Blog
+					</h3>
+					<a
+						href={`/blog/${latestPost.id}`}
+						class="block p-4 border border-border hover:border-sky-500/30 rounded-xl hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10 no-underline transition-all duration-300"
+					>
+						<div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-y-1">
+							<h5 class="text-base font-bold text-fg-dark group-hover:text-sky-500 transition-colors my-0">
+								{latestPost.data.title}
+							</h5>
+							<span class="text-xs font-mono text-fg-light">
+								{new Date(
+									latestPost.data.pubDate,
+								).toLocaleDateString("en-US", {
+									month: "short",
+									day: "numeric",
+									year: "numeric",
+								})}
+							</span>
+						</div>
+						<p class="text-sm text-fg-light mt-2 mb-0 line-clamp-2">
+							{latestPost.data.description}
+						</p>
+					</a>
+				</section>
+			)
+		}
+
+		<section
+			class="prose prose-neutral dark:prose-invert max-w-none pt-8 my-8 space-y-4"
+		>
+			<h3 class="text-xl font-bold text-fg-dark m-0">Acknowledgments</h3>
+			The following projects have been important to the creation this website:
+			<ul>
+				<li><a href="https://zxh.me/">https://zxh.me/</a>, an open-source portfolio, from which the structre and tech stack of this website is heavily inspired.</li>
+				<li><a href="https://craftpix.net/freebies/ocean-and-clouds-free-pixel-art-backgrounds/">https://craftpix.net/freebies/ocean-and-clouds-free-pixel-art-backgrounds/</a> from which the pixel-art of the hero component at the top of this page comes from.</li>
+			</ul>
+		</section>
+	</main>
+</BaseLayout>

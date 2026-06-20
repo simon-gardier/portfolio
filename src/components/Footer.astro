@@ -1,0 +1,46 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="w-full bg-transparent py-10 px-6 mt-16 text-sm text-fg-light font-mono">
+  <div class="max-w-2xl mx-auto flex justify-center items-center gap-4 text-center">
+    <div class="space-y-1">
+      <p class="m-0 font-semibold text-xs md:text-sm">
+        &copy; Simon Gardier (2026 - {currentYear})
+      </p>
+    </div>
+
+    <div class="flex items-center justify-center gap-x-6 text-[11px] md:text-xs font-semibold">
+      <a 
+        href="/rss.xml" 
+        target="_blank" 
+        class="hover:text-sky-500 no-underline hstack gap-1.5 transition-colors cursor-pointer"
+        title="RSS XML Articles Feed"
+      >
+        <span class="i-lucide:rss text-sm"></span>
+        <span>RSS</span>
+      </a>
+
+      <a 
+        href="/sitemap-index.xml" 
+        target="_blank" 
+        class="hover:text-sky-500 no-underline hstack gap-1.5 transition-colors cursor-pointer"
+        title="XML Sitemap Directory"
+      >
+        <span class="i-lucide:map text-sm"></span>
+        <span>Sitemap</span>
+      </a>
+
+      <a 
+        href="https://github.com/your-username" 
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hover:text-sky-500 no-underline hstack gap-1.5 transition-colors cursor-pointer"
+        title="Open Source Profile"
+      >
+        <span class="i-eva:github-outline text-sm"></span>
+        <span>Source</span>
+      </a>
+    </div>
+  </div>
+</footer>

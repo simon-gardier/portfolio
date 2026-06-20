@@ -1,0 +1,44 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SearchEngine from '../components/SearchEngine';
+
+const allPosts = await getCollection('blog');
+const allProjects = await getCollection('projects');
+const allPubs = await getCollection('publications');
+
+const blogData = allPosts.map(post => ({
+  title: post.data.title,
+  description: post.data.description,
+  link: `/blog/${post.id}`,
+  tags: post.data.tags || [],
+  type: 'Blog Post'
+}));
+
+const projectData = allProjects.map(project => ({
+  title: project.data.title,
+  description: project.data.description,
+  link: '/projects',
+  tags: project.data.techStack || [],
+  type: 'Project'
+}));
+
+const pubData = allPubs.map(pub => ({
+  title: pub.data.title,
+  description: `${pub.data.journal} - Authors: ${pub.data.authors.join(', ')}`,
+  link: '/publications',
+  tags: pub.data.authors || [],
+  type: 'Publication'
+}));
+
+const searchableData = [...blogData, ...projectData, ...pubData];
+---
+<BaseLayout title="Simon Gardier - Search" activePage="search">
+  <main class="max-w-2xl mx-auto py-4">
+    <div class="mb-8 text-center md:text-left">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-fg-dark my-0">Search</h1>
+    </div>
+    
+    <SearchEngine client:load data={searchableData} />
+  </main>
+</BaseLayout>
