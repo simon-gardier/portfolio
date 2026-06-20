@@ -18,12 +18,21 @@ const latestPost = sortedPosts[0];
 	<main
         class="w-full max-w-4xl mx-auto px-6 md:px-10 py-12 relative z-20 min-h-screen bg-bg transition-colors duration-300"
 	>
-		<section class="mb-6">
-			<h3 class="text-xl font-bold text-fg-dark m-0">Hello, world!</h3>
-			<p class="text-base md:text-sm leading-relaxed my-2 prose prose-neutral dark:prose-invert">
-				This is the personal website of Simon Gardier.
-			</p>
-		</section>
+        <section class="flex items-end justify-between gap-6 mb-6">
+            <div class="flex-1">
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-fg-dark m-0">Hello, world!</h3>
+                <p class="text-base sm:text-lg leading-relaxed my-2 prose prose-neutral dark:prose-invert">
+                    This is the personal website of <span class="text-lg sm:text-xl font-bold text-fg-dark">Simon Gardier</span>.
+                </p>
+            </div>
+            <div class="flex-shrink-0">
+                <img
+                    src="/images/profile/profile.jpeg"
+                    alt="Simon Gardier portrait"
+                    class="w-32 h-32 sm:w-40 sm:h-40 object-cover rounded-xl border border-border rotate-3 hover:rotate-0 transition-transform duration-300 shadow-sm"
+                />
+            </div>
+        </section>
 
 		<section class="flex flex-wrap gap-3.5 my-6">
 			<a

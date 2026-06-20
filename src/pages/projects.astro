@@ -16,7 +16,7 @@ const projectsByYear = sortedProjects.reduce((acc, project) => {
 const years = Object.keys(projectsByYear).map(Number).sort((a, b) => b - a);
 ---
 
-<BaseLayout title="Simon Gardier - Projects" activePage="projects">
+<BaseLayout title="Simon Gardier - Projects" description="A collection of computer science, computer vision, and other software projects by Simon Gardier." activePage="projects">
   <div class="max-w-4xl mx-auto py-4">
     <div class="mb-10 text-center md:text-left prose prose-neutral dark:prose-invert">
       <h1 class="text-3xl md:text-4xl font-extrabold text-fg-dark my-0">Projects</h1>

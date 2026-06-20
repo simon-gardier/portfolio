@@ -18,7 +18,7 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 const allTags = Array.from(new Set(allPosts.flatMap(post => post.data.tags || []))).sort();
 ---
 
-<BaseLayout title="Simon Gardier - Blog" activePage="blog">
+<BaseLayout title="Simon Gardier - Blog" description="Personal blog articles of Simon Gardier covering software engineering, embedded systems, and machine learning." activePage="blog">
   <div class="max-w-4xl mx-auto py-4">
     <div class="mb-10 text-center md:text-left">
       <h1 class="text-3xl md:text-4xl font-extrabold text-fg-dark my-0">Blog Posts</h1>
