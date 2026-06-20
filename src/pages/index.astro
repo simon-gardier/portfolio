@@ -10,7 +10,7 @@ const sortedPosts = allPosts.sort(
 const latestPost = sortedPosts[0];
 ---
 
-<BaseLayout title="Simon Gardier - Home" activePage="home" fullWidth={true}>
+<BaseLayout title="Simon Gardier" activePage="home" fullWidth={true}>
 	<section class="w-full relative z-10">
 		<HeroContainer client:load />
 	</section>
@@ -137,6 +137,7 @@ const latestPost = sortedPosts[0];
 			<ul>
 				<li><a href="https://zxh.me/">https://zxh.me/</a>, an open-source portfolio, from which the structre and tech stack of this website is heavily inspired.</li>
 				<li><a href="https://craftpix.net/freebies/ocean-and-clouds-free-pixel-art-backgrounds/">https://craftpix.net/freebies/ocean-and-clouds-free-pixel-art-backgrounds/</a> from which the pixel-art of the hero component at the top of this page comes from.</li>
+				<li style={{ cursor: "url('/hero/cursor.png'), pointer" }}><a href="https://www.magnific.com/icon/wind_12414771">https://www.magnific.com</a> from which the wind cursor comes from.</li>
 			</ul>
 		</section>
 	</main>
