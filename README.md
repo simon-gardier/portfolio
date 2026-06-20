@@ -7,7 +7,7 @@ A static personal portfolio and blog built with Astro, heavily inspired by the d
 - **Astro** (`astro`) - Core web framework.
 - **UnoCSS** (`@unocss/astro`, `unocss`) - CSS engine.
 - **SolidJS** (`@astrojs/solid-js`, `solid-js`) - UI library used for interactive components (e.g., search and animated hero layers).
-- **Fuse.js** (`fuse.js`) - Ssearch library.
+- **Fuse.js** (`fuse.js`) - Search library.
 - **Astro Sitemap** (`@astrojs/sitemap`) - Builds the site's XML Sitemap.
 - **Astro RSS** (`@astrojs/rss`) - Generates RSS XML feeds.
 
