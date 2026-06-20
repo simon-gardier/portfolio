@@ -5,7 +5,8 @@ import UnoCSS from '@unocss/astro';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://sgdr.xyz',
+  output: 'static',
+  site: 'https://sgardier.xyz',
   integrations: [
     solidJs(),
     sitemap({
