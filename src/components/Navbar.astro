@@ -14,11 +14,12 @@ const { activePage = "" } = Astro.props;
 
   <nav class="hstack gap-x-3.5 md:gap-x-5 text-[11px] md:text-xs font-mono">
     <a
-      class={`nav-item hover:text-sky-500 no-underline transition-colors cursor-pointer ${activePage === "publications" ? "nav-active !text-sky-500" : ""}`}
+      class={`nav-item hover:text-sky-500 no-underline transition-colors cursor-pointer flex items-center ${activePage === "publications" ? "nav-active !text-sky-500" : ""}`}
       href="/publications"
       aria-label="Publications"
     >
-      Publications
+      <span class="hidden md:inline">Publications</span>
+      <span class="inline md:hidden i-lucide:scroll text-xs block" aria-hidden="true" title="Publications"></span>
     </a>
 
     <a
@@ -26,8 +27,9 @@ const { activePage = "" } = Astro.props;
       href="/blog"
       aria-label="Blog"
     >
-      <span>Blog</span>
-      <span class="absolute -top-1.5 -right-2 pointer-events-none flex">
+      <span class="hidden md:inline">Blog</span>
+      <span class="inline md:hidden i-lucide:mail text-xs block" aria-hidden="true" title="Blog"></span>
+      <span class="absolute -top-1.5 -right-2 pointer-events-none hidden md:flex">
         <img 
           src="/images/letter.png" 
           alt="Breathe" 
@@ -37,11 +39,12 @@ const { activePage = "" } = Astro.props;
     </a>
 
     <a
-      class={`nav-item hover:text-sky-500 no-underline transition-colors cursor-pointer ${activePage === "projects" ? "nav-active !text-sky-500" : ""}`}
+      class={`nav-item hover:text-sky-500 no-underline transition-colors cursor-pointer flex items-center ${activePage === "projects" ? "nav-active !text-sky-500" : ""}`}
       href="/projects"
       aria-label="Projects"
     >
-      Projects
+      <span class="hidden md:inline">Projects</span>
+      <span class="inline md:hidden i-lucide:pen text-xs block" aria-hidden="true" title="Projects"></span>
     </a>
 
     <a
