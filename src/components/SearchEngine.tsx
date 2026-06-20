@@ -73,11 +73,6 @@ export default function SearchEngine(props: SearchEngineProps) {
         <span>
           Showing {results().length} of {props.data.length} entries
         </span>
-        <Show when={query().trim().length > 0}>
-          <span class="font-bold text-sky-500">
-            Fuzzy matching enabled
-          </span>
-        </Show>
       </div>
 
       {/* Search Results Layout */}

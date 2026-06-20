@@ -4,5 +4,5 @@ description: "MonteMaps is a Google Maps-like software that allows the user to l
 techStack: ["Python", "Viser", "COLMAP", "MegaLoc", "PyTorch", "FAISS"]
 releaseYear: 2026
 github: "https://github.com/simon-gardier/monte-maps/"
-image: "images/projects/montemaps.png"
+image: "/images/projects/montemaps.png"
 ---

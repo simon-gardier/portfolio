@@ -6,5 +6,5 @@ The program uses less than 2KB of RAM and runs at 60FPS on a 8MIPS micro control
 techStack: ["Assembly", "PAL Signal", "PIC", "MPLAB X"]
 releaseYear: 2024
 github: "https://github.com/simon-gardier/dance-dance-revolution-assembly"
-image: "images/projects/ddr.png"
+image: "/images/projects/ddr.png"
 ---

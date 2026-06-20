@@ -4,5 +4,5 @@ description: "In this project, our program explores an unknown maze with a Turtl
 techStack: ["Python", "Pytorch"]
 releaseYear: 2025
 github: "https://github.com/simon-gardier/pizza-delivery-robot"
-image: "images/projects/pizza.png"
+image: "/images/projects/pizza.png"
 ---

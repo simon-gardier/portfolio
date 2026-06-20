@@ -4,5 +4,5 @@ description: "Analysis of a chess game from a fixed or moving video. The white a
 techStack: ["Python", "Pytorch", "Threading"]
 releaseYear: 2025
 github: "https://github.com/simon-gardier/chess-cv"
-image: "images/projects/chess.png"
+image: "/images/projects/chess.png"
 ---

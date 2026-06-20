@@ -4,5 +4,5 @@ description: "If you have already mined in Minecraft, you may have found yoursel
 techStack: ["Python", "Pytorch"]
 releaseYear: 2025
 github: "https://github.com/simon-gardier/yolo-v5-m-implementation"
-image: "images/projects/yolo.png"
+image: "/images/projects/yolo.png"
 ---
