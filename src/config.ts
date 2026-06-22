@@ -1,7 +1,7 @@
 export const SITE = {
   website: "https://sgardier.xyz",
   title: "Simon Gardier",
-  desc: "Simon Gardier Personal Website",
+  desc: "Welcome on Simon Gardier's website!",
   author: "Simon Gardier"
 };
 

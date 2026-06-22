@@ -1,6 +1,6 @@
 ---
 title: "Dance Dance Revolution Game written in Assembly!"
-description: "This project is a simple remake of the famous Dance Dance Revoluation game from Konami. The project is designed for the PIC16F1789. The project was developped using MPLAB X IDE and picas.
+description: "This project is a remake of the famous Dance Dance Revoluation game from Konami. The project is designed for the PIC16F1789. The Dance Dance Revolution input pad has been re-created for the occassion and a software of ~7000 lines of assembly handles user inputs, game state, analog (PAL) video signal and music output.
 
 The program uses less than 2KB of RAM and runs at 60FPS on a 8MIPS micro controller."
 techStack: ["Assembly", "PAL Signal", "PIC", "MPLAB X"]
