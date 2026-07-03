@@ -55,13 +55,13 @@ export default function SearchEngine(props: SearchEngineProps) {
           value={query()}
           onInput={(e) => setQuery(e.currentTarget.value)}
           class="w-full pl-11 pr-4 py-3 rounded-xl border border-border bg-bg-dark/25 focus:bg-transparent text-fg-dark focus:border-sky-500/50 outline-none transition-all duration-200 text-base"
-          aria-label="Search Database"
+          aria-label="Search"
         />
         <Show when={query().length > 0}>
           <button
             onClick={() => setQuery("")}
             class="absolute inset-y-0 right-4 hstack text-fg-light hover:text-fg-dark transition-colors cursor-pointer"
-            aria-label="Clear Search Query"
+            aria-label="Clear Search"
           >
             <span class="i-lucide:x text-base"></span>
           </button>
