@@ -4,24 +4,30 @@ export interface Props {
 }
 
 const { activePage = "" } = Astro.props;
+
+const menuItems = [
+  { href: "/publications", label: "Publications", icon: "i-lucide:scroll" },
+  { href: "/blog", label: "Blog", icon: "i-lucide:mail" },
+  { href: "/projects", label: "Projects", icon: "i-lucide:pen" },
+  { href: "/search", label: "Search", icon: "i-uil:search" }
+];
 ---
 
-<header class="fixed flex justify-center items-center top-4 left-4 md:left-8 z-50 h-14 hstack border border-white/20 dark:border-white/10 bg-white/40 dark:bg-black/30 backdrop-blur-xl px-4 md:px-5 rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.2)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] transition-all duration-300 max-w-[calc(100%-2rem)] md:max-w-max">
-  <a class="font-mono text-fg-dark hover:text-fg-dark no-underline text-md flex items-center gap-1 cursor-pointer transition-colors mr-6 md:mr-10" href="/">
+<header class="fixed top-4 right-4 md:left-8 md:right-auto z-50 max-w-[calc(100%-2rem)] md:max-w-max">
+  <div class="flex justify-end md:justify-center items-center h-14 border border-white/20 dark:border-white/10 bg-white/40 dark:bg-black/30 backdrop-blur-xl px-4 md:px-5 rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.2)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] transition-all duration-300">
+  <a class="font-mono text-fg-dark hover:text-fg-dark no-underline text-md flex items-center gap-1 cursor-pointer transition-colors mr-5" href="/">
     <span class="flex justify-center items-center">
       <span class="md:inline">Simon Gardier</span>
     </span>
-    <span class="w-[7px] h-[1.2em] bg-neutral-200 dark:bg-neutral-300 ml-0.5 self-center animate-smooth-blink"></span>
   </a>
 
-  <nav class="hstack gap-x-3.5 md:gap-x-5 text-sm font-mono">
+  <nav class="hidden md:flex items-center gap-x-5 text-sm font-mono">
     <a
       class={`nav-item no-underline transition-colors cursor-pointer flex items-center ${activePage === "publications" ? "nav-active !text-sky-500" : ""}`}
       href="/publications"
       aria-label="Publications"
     >
-      <span class="hidden md:inline">Publications</span>
-      <span class="inline md:hidden i-lucide:scroll text-xs block" aria-hidden="true" title="Publications"></span>
+      Publications
     </a>
 
     <a
@@ -29,9 +35,8 @@ const { activePage = "" } = Astro.props;
       href="/blog"
       aria-label="Blog"
     >
-      <span class="hidden md:inline">Blog</span>
-      <span class="inline md:hidden i-lucide:mail text-xs block" aria-hidden="true" title="Blog"></span>
-      <span class="absolute -top-1.5 -right-2 pointer-events-none hidden md:flex">
+      Blog
+      <span class="absolute -top-1.5 -right-2 pointer-events-none flex">
         <img 
           src="/images/letter.png" 
           alt="Letter notification logo" 
@@ -45,8 +50,7 @@ const { activePage = "" } = Astro.props;
       href="/projects"
       aria-label="Projects"
     >
-      <span class="hidden md:inline">Projects</span>
-      <span class="inline md:hidden i-lucide:pen text-xs block" aria-hidden="true" title="Projects"></span>
+      Projects
     </a>
 
     <a
@@ -58,16 +62,56 @@ const { activePage = "" } = Astro.props;
     </a>
 
     <button
-      id="theme-toggle"
-      class="p-1.5 rounded-full bg-bg-dark/40 border border-white/15 text-fg-light hover:text-fg-dark cursor-pointer transition-all duration-200"
+      class="theme-toggle p-1.5 rounded-full bg-bg-dark/40 border border-white/15 text-fg-light hover:text-fg-dark cursor-pointer transition-all duration-200"
       aria-label="Toggle Light/Dark Theme"
     >
-      {/* Light Icon */}
       <span class="i-lucide:sun text-xs block dark:hidden"></span>
-      {/* Dark Icon */}
       <span class="i-lucide:moon text-xs hidden dark:block"></span>
     </button>
   </nav>
+
+  {/* Mobile: three-dots toggle */}
+  <button
+    id="mobile-menu-toggle"
+    class="md:hidden relative w-8 h-8 shrink-0 flex-center rounded-full bg-bg-dark/40 border border-white/15 text-fg-light cursor-pointer transition-all duration-300"
+    aria-label="Open menu"
+    aria-expanded="false"
+    aria-controls="mobile-menu"
+  >
+    <span class="menu-dot menu-dot-1"></span>
+    <span class="menu-dot menu-dot-2"></span>
+    <span class="menu-dot menu-dot-3"></span>
+  </button>
+  </div>
+
+  {/* Mobile: dropdown */}
+  <div
+    id="mobile-menu"
+    class="mobile-menu md:hidden absolute top-[calc(100%+0.625rem)] right-0 left-auto min-w-[14rem] max-w-[calc(100vw-2rem)] border border-white/20 dark:border-white/10 bg-white/40 dark:bg-black/30 backdrop-blur-xl rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.2)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] overflow-hidden"
+  >
+    <nav class="flex flex-col gap-1 p-2 text-sm font-mono" aria-label="Mobile navigation">
+      {menuItems.map((item, i) => (
+        <a
+          class={`menu-item no-underline flex items-center gap-3 px-4 py-3 rounded-2xl text-fg hover:text-fg-dark hover:bg-white/40 dark:hover:bg-white/10 transition-colors ${activePage === item.label.toLowerCase() ? "!text-sky-500 bg-white/40 dark:bg-white/10" : ""}`}
+          href={item.href}
+          style={`--i: ${i}`}
+        >
+          <span class={`${item.icon} text-sm block`} aria-hidden="true"></span>
+          {item.label}
+        </a>
+      ))}
+      <div class="menu-item h-px mx-3 my-1 bg-white/30 dark:bg-white/10" style={`--i: ${menuItems.length}`} aria-hidden="true"></div>
+      <button
+        class="theme-toggle menu-item flex items-center gap-3 px-4 py-3 rounded-2xl text-fg hover:text-fg-dark hover:bg-white/40 dark:hover:bg-white/10 transition-colors cursor-pointer text-sm font-mono bg-transparent border-none text-left"
+        style={`--i: ${menuItems.length + 1}`}
+        aria-label="Toggle Light/Dark Theme"
+      >
+        <span class="i-lucide:sun text-sm block dark:hidden" aria-hidden="true"></span>
+        <span class="i-lucide:moon text-sm hidden dark:block" aria-hidden="true"></span>
+        Theme
+      </button>
+    </nav>
+  </div>
 </header>
 <style>
   @keyframes breathe {
@@ -89,29 +133,107 @@ const { activePage = "" } = Astro.props;
 
 <script is:inline>
   document.addEventListener('DOMContentLoaded', () => {
-    const themeBtn = document.getElementById('theme-toggle');
-    if (!themeBtn) return;
+    document.querySelectorAll('.theme-toggle').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.contains('dark');
+        const nextTheme = isDark ? 'light' : 'dark';
 
-    themeBtn.addEventListener('click', () => {
-      const isDark = document.documentElement.classList.contains('dark');
-      const nextTheme = isDark ? 'light' : 'dark';
-      
-      document.documentElement.classList.toggle('dark', !isDark);
-      localStorage.setItem('theme', nextTheme);
+        document.documentElement.classList.toggle('dark', !isDark);
+        localStorage.setItem('theme', nextTheme);
+      });
+    });
+
+    const toggle = document.getElementById('mobile-menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    if (!toggle || !menu) return;
+    const header = toggle.closest('header');
+
+    const setOpen = (open) => {
+      header.classList.toggle('menu-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    };
+
+    // toggle button, close on link tap or outside click
+    document.addEventListener('click', (e) => {
+      if (toggle.contains(e.target)) setOpen(!header.classList.contains('menu-open'));
+      else if (!menu.contains(e.target) || e.target.closest('a')) setOpen(false);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
     });
   });
 </script>
 
 <style>
-  @keyframes smooth-blink {
-    0%, 100% { 
-      opacity: 0; 
-    }
-    30% { 
-      opacity: 1; 
-    }
+  /* Three-dots toggle, change in an X when open --- */
+  .menu-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 3.5px;
+    height: 3.5px;
+    border-radius: 9999px;
+    background: currentColor;
+    transform: translate(-50%, -50%);
+    transition: all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
-  .animate-smooth-blink {
-    animation: smooth-blink 2s linear infinite;
+  .menu-dot-1 { transform: translate(-50%, calc(-50% - 5.5px)); }
+  .menu-dot-3 { transform: translate(-50%, calc(-50% + 5.5px)); }
+
+  .menu-open .menu-dot-1 {
+    width: 15px;
+    height: 2px;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+  .menu-open .menu-dot-2 {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  .menu-open .menu-dot-3 {
+    width: 15px;
+    height: 2px;
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  .mobile-menu {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px) scale(0.55);
+    transform-origin: top right;
+    filter: blur(10px);
+    transition:
+      transform 0.38s cubic-bezier(0.3, 1.8, 0.5, 1),
+      opacity 0.2s ease,
+      filter 0.25s ease,
+      visibility 0s 0.2s;
+  }
+  .menu-open .mobile-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    filter: none;
+    transition-delay: 0s;
+  }
+
+  .menu-item {
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.18s ease, transform 0.3s cubic-bezier(0.3, 1.9, 0.55, 1);
+  }
+  .menu-open .menu-item {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(0.04s + var(--i) * 0.03s);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-menu,
+    .menu-item,
+    .menu-dot {
+      transition-duration: 0.01s !important;
+      transition-delay: 0s !important;
+    }
   }
 </style>

@@ -8,8 +8,7 @@ import {
   transformerVariantGroup
 } from "unocss";
 
-const DEFAULT_FONTS =
-  "system-ui, -apple-system, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif";
+const DEFAULT_FONTS = "Roboto";
 
 export default defineConfig({
   shortcuts: [
@@ -58,6 +57,10 @@ export default defineConfig({
           font-family: ${DEFAULT_FONTS};
         }
 
+        code, pre, kbd, samp {
+          font-family: ${DEFAULT_FONTS};
+        }
+
         * {
           border-color: hsl(var(--border));
         }
@@ -70,9 +73,10 @@ export default defineConfig({
     }
   ],
   theme: {
-    font: {
+    fontFamily: {
       sans: DEFAULT_FONTS,
-      ui: DEFAULT_FONTS
+      ui: DEFAULT_FONTS,
+      mono: DEFAULT_FONTS
     },
     colors: {
       content: "global",
