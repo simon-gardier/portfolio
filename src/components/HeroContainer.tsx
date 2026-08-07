@@ -29,13 +29,30 @@ export default function HeroContainer() {
     >
       <style>
         {`
-          @keyframes hero-wind {
+          @keyframes hero-wind-mobile {
+            from { transform: translateX(calc(var(--amp) * -1)); }
+            to { transform: translateX(var(--amp)); }
+          }
+          @keyframes hero-wind-desktop {
             from { transform: scale(1.04) translateX(calc(var(--amp) * -1)); }
             to { transform: scale(1.04) translateX(var(--amp)); }
           }
           .hero-wind-layer {
-            animation: hero-wind 12s ease-in-out infinite alternate;
+            animation: hero-wind-mobile 12s ease-in-out infinite alternate;
             will-change: transform;
+          }
+          .hero-cloud-layer {
+            object-fit: contain;
+            object-position: center bottom;
+          }
+          @media (min-width: 768px) {
+            .hero-wind-layer {
+              animation-name: hero-wind-desktop;
+            }
+            .hero-cloud-layer {
+              object-fit: cover;
+              object-position: center;
+            }
           }
           @keyframes hero-scroll-bounce {
             0%, 100% { transform: translate(-50%, 0); opacity: 0.65; }
@@ -65,7 +82,7 @@ export default function HeroContainer() {
           <img
             src={layer.src}
             alt={`Parallax ${layer.id}`}
-            class="hero-wind-layer absolute inset-0 w-full h-full object-cover pointer-events-none"
+            class="hero-wind-layer hero-cloud-layer absolute inset-0 w-full h-full pointer-events-none"
             style={{ "--amp": `${layer.amplitude}px` }}
           />
         )}
