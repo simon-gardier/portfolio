@@ -24,7 +24,7 @@ export default function HeroContainer() {
 
   return (
     <div
-      class="relative w-full aspect-video overflow-hidden border-b border-border rounded-b-xl md:rounded-b-2xl bg-slate-950 select-none shadow-md"
+      class="relative h-[100vh] overflow-hidden border-b border-border rounded-b-sm md:rounded-b-md bg-slate-950 select-none shadow-md"
       style={{ cursor: "url('/hero/cursor.png'), pointer" }}
     >
       <style>
@@ -37,8 +37,19 @@ export default function HeroContainer() {
             animation: hero-wind 12s ease-in-out infinite alternate;
             will-change: transform;
           }
-          @media (prefers-reduced-motion: reduce) {
-            .hero-wind-layer { animation: none; }
+          @keyframes hero-scroll-bounce {
+            0%, 100% { transform: translate(-50%, 0); opacity: 0.65; }
+            50% { transform: translate(-50%, 8px); opacity: 1; }
+          }
+          @keyframes hero-scroll-pulse {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.08); }
+          }
+          .hero-scroll-widget {
+            animation: hero-scroll-bounce 1.6s ease-in-out infinite;
+          }
+          .hero-scroll-wheel {
+            animation: hero-scroll-pulse 1.6s ease-in-out infinite;
           }
         `}
       </style>
@@ -59,6 +70,15 @@ export default function HeroContainer() {
           />
         )}
       </For>
+
+      <a
+        href="#main_index"
+        class="hero-scroll-widget absolute top-[80%] left-1/2 z-10 -translate-x-1/2 cursor-pointer rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black/40"
+      >
+        <div class="relative h-9 w-6 rounded-full border border-white/70 bg-black/25 backdrop-blur-[1px]">
+          <div class="hero-scroll-wheel absolute left-1/2 top-1 h-2 w-1 -translate-x-1/2 rounded-full bg-white/85" />
+        </div>
+      </a>
     </div>
   );
 }

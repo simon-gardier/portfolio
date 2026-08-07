@@ -5,10 +5,16 @@ import HeroContainer from "../components/HeroContainer";
 
 const allPosts = await getCollection("blog");
 const sortedPosts = allPosts.sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+	(a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf(),
 );
 const latestPost = sortedPosts[0];
 ---
+
+<style>
+	html {
+		scroll-behavior: smooth;
+	}
+</style>
 
 <BaseLayout title="Simon Gardier" activePage="home" fullWidth={true}>
 	<section class="w-full relative z-10">
@@ -16,11 +22,11 @@ const latestPost = sortedPosts[0];
 	</section>
 
 	<main
-        class="w-full max-w-4xl mx-auto px-6 md:px-10 py-12 relative z-20 min-h-screen bg-bg transition-colors duration-300"
+        class="w-full max-w-4xl mx-auto px-6 md:px-10 py-12 relative z-20 min-h-screen bg-bg transition-colors duration-300" id="main_index"
 	>
         <section class="flex items-end justify-between gap-6 mb-6 mt-12">
             <div class="flex-1">
-                <h3 class="text-2xl sm:text-3xl font-extrabold text-fg-dark m-0">Hello,</h3>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-fg-dark m-0" id="hello_title">Hello,</h3>
                 <p class="text-base sm:text-lg leading-relaxed my-2 prose prose-neutral dark:prose-invert">
                     This is the personal website of <span class="text-lg sm:text-xl font-bold text-fg-dark">Simon Gardier</span>.
                 </p>
@@ -42,7 +48,7 @@ const latestPost = sortedPosts[0];
 				class="btn hstack gap-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-fg-dark px-3 py-1.5 rounded-lg text-xs font-mono no-underline transition-colors"
 			>
 				<span class="i-lucide:rss text-xs text-sky-500"></span>
-				<span>CV</span>
+				<span>Resume</span>
 			</a>
 			<a
 				href="mailto:gardiersimon@gmail.com"
@@ -122,7 +128,7 @@ const latestPost = sortedPosts[0];
 							</h5>
 							<span class="text-xs font-mono text-fg-light">
 								{new Date(
-									latestPost.data.pubDate,
+									latestPost.data.publishedAt,
 								).toLocaleDateString("en-US", {
 									month: "short",
 									day: "numeric",
