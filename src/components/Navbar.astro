@@ -14,74 +14,83 @@ const menuItems = [
 ---
 
 <header class="fixed top-4 right-4 md:left-8 md:right-auto z-50 max-w-[calc(100%-2rem)] md:max-w-max">
-  <div class="flex justify-end md:justify-center items-center h-14 border border-white/20 dark:border-white/10 bg-white/40 dark:bg-black/30 backdrop-blur-xl px-4 md:px-5 rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.2)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] transition-all duration-300">
-  <a class="font-mono text-fg-dark hover:text-fg-dark no-underline text-md flex items-center gap-1 cursor-pointer transition-colors mr-5" href="/">
-    <span class="flex justify-center items-center">
-      <span class="md:inline">Simon Gardier</span>
-    </span>
-  </a>
-
-  <nav class="hidden md:flex items-center gap-x-5 text-sm font-mono">
+  <div class="flex justify-between md:justify-center items-center h-14 border border-white/20 dark:border-white/10 bg-white/40 dark:bg-black/30 backdrop-blur-xl px-4 md:px-5 rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.2)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] transition-all duration-300">
     <a
-      class={`nav-item no-underline transition-colors cursor-pointer flex items-center ${activePage === "publications" ? "nav-active !text-sky-500" : ""}`}
-      href="/publications"
-      aria-label="Publications"
+      class="md:hidden no-underline text-white font-bold text-xl font-mono cursor-pointer pr-4"
+      href="/"
+      aria-label="Home"
     >
-      Publications
+      Simon Gardier
     </a>
+    <nav class="hidden md:flex items-center gap-x-5 font-mono">
+      <a
+        class={`nav-item no-underline transition-colors cursor-pointer flex items-center text-white text-lg }`}
+        href="/"
+        aria-label="Home"
+      >
+        Simon Gardier
+      </a>
 
-    <a
-      class={`nav-item no-underline transition-colors cursor-pointer relative flex items-center gap-1 ${activePage === "blog" ? "nav-active !text-sky-500" : ""}`}
-      href="/blog"
-      aria-label="Blog"
-    >
-      Blog
-      <span class="absolute -top-1.5 -right-2 pointer-events-none flex">
-        <img 
-          src="/images/letter.png" 
-          alt="Letter notification logo" 
-          class="w-3.5 h-3.5 object-contain animate-breathe" 
-        />
-      </span>
-    </a>
+      <a
+        class={`nav-item no-underline transition-colors cursor-pointer flex items-center ${activePage === "publications" ? "nav-active !text-sky-500" : ""}`}
+        href="/publications"
+        aria-label="Publications"
+      >
+        Publications
+      </a>
 
-    <a
-      class={`nav-item no-underline transition-colors cursor-pointer flex items-center ${activePage === "projects" ? "nav-active !text-sky-500" : ""}`}
-      href="/projects"
-      aria-label="Projects"
-    >
-      Projects
-    </a>
+      <a
+        class={`nav-item no-underline transition-colors cursor-pointer relative flex items-center gap-1 ${activePage === "blog" ? "nav-active !text-sky-500" : ""}`}
+        href="/blog"
+        aria-label="Blog"
+      >
+        Blog
+        <span class="absolute -top-1.5 -right-2 pointer-events-none flex">
+          <img 
+            src="/images/letter.png" 
+            alt="Letter notification logo" 
+            class="w-3.5 h-3.5 object-contain animate-breathe" 
+          />
+        </span>
+      </a>
 
-    <a
-      class={`p-1.5 rounded-full bg-bg-dark/40 border border-white/15 text-fg-light hover:text-fg-dark transition-all duration-200 cursor-pointer flex items-center ${activePage === "search" ? "nav-active !text-sky-500 border-sky-500/20 bg-bg-dark/50" : ""}`}
-      href="/search"
-      aria-label="Search"
-    >
-      <span class="i-uil:search text-xs block"></span>
-    </a>
+      <a
+        class={`nav-item no-underline transition-colors cursor-pointer flex items-center ${activePage === "projects" ? "nav-active !text-sky-500" : ""}`}
+        href="/projects"
+        aria-label="Projects"
+      >
+        Projects
+      </a>
 
+      <a
+        class={`p-1.5 rounded-full bg-bg-dark/40 border border-white/15 text-fg-light hover:text-fg-dark transition-all duration-200 cursor-pointer flex items-center ${activePage === "search" ? "nav-active !text-sky-500 border-sky-500/20 bg-bg-dark/50" : ""}`}
+        href="/search"
+        aria-label="Search"
+      >
+        <span class="i-uil:search text-xs block"></span>
+      </a>
+
+      <button
+        class="theme-toggle p-1.5 rounded-full bg-bg-dark/40 border border-white/15 text-fg-light hover:text-fg-dark cursor-pointer transition-all duration-200"
+        aria-label="Toggle Light/Dark Theme"
+      >
+        <span class="i-lucide:sun text-xs block dark:hidden"></span>
+        <span class="i-lucide:moon text-xs hidden dark:block"></span>
+      </button>
+    </nav>
+
+    {/* Mobile: three-dots toggle */}
     <button
-      class="theme-toggle p-1.5 rounded-full bg-bg-dark/40 border border-white/15 text-fg-light hover:text-fg-dark cursor-pointer transition-all duration-200"
-      aria-label="Toggle Light/Dark Theme"
+      id="mobile-menu-toggle"
+      class="md:hidden relative w-8 h-8 shrink-0 flex-center rounded-full bg-bg-dark/40 border border-white/15 text-fg-light cursor-pointer transition-all duration-300"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
     >
-      <span class="i-lucide:sun text-xs block dark:hidden"></span>
-      <span class="i-lucide:moon text-xs hidden dark:block"></span>
+      <span class="menu-dot menu-dot-1"></span>
+      <span class="menu-dot menu-dot-2"></span>
+      <span class="menu-dot menu-dot-3"></span>
     </button>
-  </nav>
-
-  {/* Mobile: three-dots toggle */}
-  <button
-    id="mobile-menu-toggle"
-    class="md:hidden relative w-8 h-8 shrink-0 flex-center rounded-full bg-bg-dark/40 border border-white/15 text-fg-light cursor-pointer transition-all duration-300"
-    aria-label="Open menu"
-    aria-expanded="false"
-    aria-controls="mobile-menu"
-  >
-    <span class="menu-dot menu-dot-1"></span>
-    <span class="menu-dot menu-dot-2"></span>
-    <span class="menu-dot menu-dot-3"></span>
-  </button>
   </div>
 
   {/* Mobile: dropdown */}
