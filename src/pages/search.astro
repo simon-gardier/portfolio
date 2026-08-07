@@ -25,7 +25,7 @@ const projectData = allProjects.map(project => ({
 
 const pubData = allPubs.map(pub => ({
   title: pub.data.title,
-  description: `${pub.data.journal} - Authors: ${pub.data.authors.join(', ')}`,
+  description: `${pub.data.journal || 'Publication'}${pub.data.authors?.length ? ` - Authors: ${pub.data.authors.join(', ')}` : ''}`,
   link: '/publications',
   tags: pub.data.authors || [],
   type: 'Publication'

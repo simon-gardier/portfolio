@@ -4,10 +4,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const allPublications = await getCollection('publications');
 
-const sortedPubs = allPublications.sort((a, b) => b.data.year - a.data.year);
+const sortedPubs = allPublications.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 
 const pubsByYear = sortedPubs.reduce((acc, pub) => {
-  const year = pub.data.year;
+  const year = pub.data.publishedAt.getFullYear();
   if (!acc[year]) acc[year] = [];
   acc[year].push(pub);
   return acc;
@@ -42,17 +42,19 @@ const years = Object.keys(pubsByYear).map(Number).sort((a, b) => b - a);
                   </h3>
                   
                   {/* Authors list */}
-                  <p class="text-sm text-fg-light my-1 leading-relaxed">
-                    {pub.data.authors.map((author, index) => {
-                      const isSelf = author.toLowerCase().includes("rivera") || author.toLowerCase().includes("gardier") || author.toLowerCase().includes("you");
-                      return (
-                        <span>
-                          {isSelf ? <u class="font-semibold text-fg-dark">{author}</u> : author}
-                          {index < pub.data.authors.length - 1 ? ", " : ""}
-                        </span>
-                      );
-                    })}
-                  </p>
+                  {pub.data.authors && (
+                    <p class="text-sm text-fg-light my-1 leading-relaxed">
+                      {pub.data.authors.map((author, index, authors) => {
+                        const isSelf = author.toLowerCase().includes("rivera") || author.toLowerCase().includes("gardier") || author.toLowerCase().includes("you");
+                        return (
+                          <span>
+                            {isSelf ? <u class="font-semibold text-fg-dark">{author}</u> : author}
+                            {index < authors.length - 1 ? ", " : ""}
+                          </span>
+                        );
+                      })}
+                    </p>
+                  )}
 
                   <p class="italic text-xs font-medium text-sky-500 my-1 font-mono">
                     {pub.data.journal}

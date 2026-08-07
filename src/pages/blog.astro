@@ -4,10 +4,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const allPosts = await getCollection('blog');
 
-const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const sortedPosts = allPosts.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 
 const postsByYear = sortedPosts.reduce((acc, post) => {
-  const year = new Date(post.data.pubDate).getFullYear();
+  const year = post.data.publishedAt.getFullYear();
   if (!acc[year]) acc[year] = [];
   acc[year].push(post);
   return acc;
@@ -57,7 +57,7 @@ const allTags = Array.from(new Set(allPosts.flatMap(post => post.data.tags || []
           
           <ul class="space-y-6 list-none p-0">
             {postsByYear[year].map(post => {
-              const formattedDate = new Date(post.data.pubDate).toLocaleDateString('en-US', {
+              const formattedDate = post.data.publishedAt.toLocaleDateString('en-US', {
                 month: 'short',
                 day: 'numeric'
               });

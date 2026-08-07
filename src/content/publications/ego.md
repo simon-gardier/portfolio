@@ -2,8 +2,7 @@
 title: "Ego: Embedding-Guided Personalization of Vision-Language Models"
 authors: ["Soroush Seifi", "Simon Gardier", "Vaggelis Dorovatas", "Daniel Olmeda Reino", "Rahaf Aljundi"]
 journal: "IEEE/CVF Computer Vision and Pattern Recognition Conference (CVPR 2026)"
-year: 2026
-
+publishedAt: 2026-03-10
 doi: "10.48550/arXiv.2603.09771"
 link: "https://arxiv.org/abs/2603.09771"
 image: "/images/publications/ego.png"

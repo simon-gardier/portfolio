@@ -4,7 +4,7 @@ description: "This project is a remake of the famous Dance Dance Revolution game
 
 The program uses less than 2KB of RAM and runs at 60FPS on an 8MIPS microcontroller."
 techStack: ["Assembly", "PAL Signal", "PIC", "MPLAB X"]
-releaseYear: 2024
+publishedAt: 2024-01-01
 github: "https://github.com/simon-gardier/dance-dance-revolution-assembly"
 image: "/images/projects/ddr.png"
 ---

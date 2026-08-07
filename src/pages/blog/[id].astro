@@ -6,7 +6,7 @@ import Giscus from '../../components/Giscus';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
-  const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  const sortedPosts = posts.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
   return sortedPosts.map((post, index) => {
     // post[index - 1] is a newer post (next), post[index + 1] is an older post (prev)
     const prevPost = index < sortedPosts.length - 1 ? sortedPosts[index + 1].id : undefined;
@@ -22,7 +22,7 @@ export async function getStaticPaths() {
 const { post, prevPost, nextPost } = Astro.props;
 const { Content } = await render(post);
 
-const formattedDate = new Date(post.data.pubDate).toLocaleDateString('en-US', {
+const formattedDate = post.data.publishedAt.toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
   day: 'numeric'
@@ -46,7 +46,7 @@ const formattedDate = new Date(post.data.pubDate).toLocaleDateString('en-US', {
         </h1>
         
         <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4 text-xs font-mono text-fg-light">
-          <time datetime={post.data.pubDate.toISOString()}>
+          <time datetime={post.data.publishedAt.toISOString()}>
             {formattedDate}
           </time>
           <span class="w-1 h-1 rounded-full bg-border"></span>

@@ -4,10 +4,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const allProjects = await getCollection('projects');
 
-const sortedProjects = allProjects.sort((a, b) => b.data.releaseYear - a.data.releaseYear);
+const sortedProjects = allProjects.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 
 const projectsByYear = sortedProjects.reduce((acc, project) => {
-  const year = project.data.releaseYear;
+  const year = project.data.publishedAt.getFullYear();
   if (!acc[year]) acc[year] = [];
   acc[year].push(project);
   return acc;

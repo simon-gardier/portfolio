@@ -5,7 +5,7 @@ export async function GET(context: any) {
   const blog = await getCollection('blog');
   
   // Sort posts by date descending
-  const sortedBlog = blog.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  const sortedBlog = blog.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 
   return rss({
     title: "Simon Gardier Portfolio & Writing",
@@ -13,7 +13,7 @@ export async function GET(context: any) {
     site: context.site || 'https://yourdomain.dev',
     items: sortedBlog.map((post) => ({
       title: post.data.title,
-      pubDate: post.data.pubDate,
+      pubDate: post.data.publishedAt,
       description: post.data.description,
       link: `/blog/${post.id}/`,
     })),
