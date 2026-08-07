@@ -30,28 +30,31 @@ export default function HeroContainer() {
       <style>
         {`
           @keyframes hero-wind-mobile {
-            from { transform: translateX(calc(var(--amp) * -1)); }
-            to { transform: translateX(var(--amp)); }
+            from { transform: translateX(calc(-50% - var(--amp))); }
+            to { transform: translateX(calc(-50% + var(--amp))); }
           }
           @keyframes hero-wind-desktop {
-            from { transform: scale(1.04) translateX(calc(var(--amp) * -1)); }
-            to { transform: scale(1.04) translateX(var(--amp)); }
+            from { transform: translateX(calc(-50% - var(--amp))) scale(1.04); }
+            to { transform: translateX(calc(-50% + var(--amp))) scale(1.04); }
           }
           .hero-wind-layer {
             animation: hero-wind-mobile 12s ease-in-out infinite alternate;
             will-change: transform;
           }
           .hero-cloud-layer {
-            object-fit: contain;
-            object-position: center bottom;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            height: 100%;
+            width: auto;
+            max-width: none;
           }
           @media (min-width: 768px) {
             .hero-wind-layer {
               animation-name: hero-wind-desktop;
             }
             .hero-cloud-layer {
-              object-fit: cover;
-              object-position: center;
+              left: 50%;
             }
           }
           @keyframes hero-scroll-bounce {
@@ -82,7 +85,7 @@ export default function HeroContainer() {
           <img
             src={layer.src}
             alt={`Parallax ${layer.id}`}
-            class="hero-wind-layer hero-cloud-layer absolute inset-0 w-full h-full pointer-events-none"
+            class="hero-wind-layer hero-cloud-layer absolute block pointer-events-none"
             style={{ "--amp": `${layer.amplitude}px` }}
           />
         )}
