@@ -17,10 +17,13 @@ const publications = defineCollection({
   schema: z.object({
     title: z.string(),
     authors: z.array(z.string()).optional(),
-    journal: z.string().optional(),
+    publisher: z.string().optional(),
     publishedAt: z.coerce.date(),
     doi: z.string().optional(),
-    link: z.string().url().optional(),
+    link: z.object({
+      url: z.string().url(),
+      text: z.string().trim().min(1),
+    }).optional(),
     image: z.string().optional(),
   }),
 });

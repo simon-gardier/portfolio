@@ -7,6 +7,12 @@ import UnoCSS from '@unocss/astro';
 export default defineConfig({
   output: 'static',
   site: 'https://sgardier.xyz',
+  vite: {
+    optimizeDeps: {
+      // Fuse ships standalone ESM; avoid stale optimized-dependency URLs in dev.
+      exclude: ['fuse.js'],
+    },
+  },
   integrations: [
     solidJs(),
     sitemap({

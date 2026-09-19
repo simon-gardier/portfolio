@@ -1,10 +1,3 @@
-export const SITE = {
-  website: "https://sgardier.xyz",
-  title: "Simon Gardier",
-  desc: "Welcome on Simon Gardier's website!",
-  author: "Simon Gardier"
-};
-
 export const GISCUS = {
   repo: import.meta.env.GISCUS_REPO || "simon-gardier/portfolio",
   repoId: import.meta.env.GISCUS_REPO_ID || "R_kgDOTAAjbA",

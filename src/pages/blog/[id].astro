@@ -29,7 +29,26 @@ const formattedDate = post.data.publishedAt.toLocaleDateString('en-US', {
 });
 ---
 
-<BaseLayout title={`${post.data.title} - Blog`} activePage="blog">
+<BaseLayout
+  title={`${post.data.title} - Simon Gardier`}
+  description={post.data.description}
+  activePage="blog"
+  type="article"
+  publishedAt={post.data.publishedAt}
+  structuredData={{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.data.title,
+    description: post.data.description,
+    url: `https://sgardier.xyz/blog/${post.id}`,
+    datePublished: post.data.publishedAt.toISOString(),
+    author: { "@type": "Person", name: "Simon Gardier", url: "https://sgardier.xyz/" },
+    publisher: { "@type": "Person", name: "Simon Gardier", url: "https://sgardier.xyz/" },
+    image: "https://sgardier.xyz/hero/hero.png",
+    keywords: post.data.tags,
+    mainEntityOfPage: { "@type": "WebPage", "@id": `https://sgardier.xyz/blog/${post.id}` },
+  }}
+>
   <div class="relative w-full">
     <TableOfContents client:load prev={prevPost} next={nextPost} />
     

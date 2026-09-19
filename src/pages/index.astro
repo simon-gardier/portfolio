@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import HeroContainer from "../components/HeroContainer";
+import HeroContainer from "../components/HeroContainer.astro";
 
 const allPosts = await getCollection("blog");
 const sortedPosts = allPosts.sort(
@@ -11,8 +11,103 @@ const latestPost = sortedPosts[0];
 ---
 
 <style>
-	html {
+	:global(html) {
 		scroll-behavior: smooth;
+	}
+
+	.home-page {
+		--intro-peek: 14rem;
+		position: relative;
+		isolation: isolate;
+	}
+
+	.hero-stage {
+		position: sticky;
+		top: 0;
+		height: max(100dvh, calc(var(--intro-peek) + 8rem));
+		z-index: 0;
+		overflow: hidden;
+	}
+
+	.hero-scene {
+		height: 100%;
+		transform: translate3d(0, var(--hero-offset, 0px), 0) scale(1.06);
+		transform-origin: center top;
+		filter: blur(var(--hero-blur, 0px));
+	}
+
+	.content-sheet {
+		display: flow-root;
+		position: relative;
+		z-index: 1;
+		border-radius: 1rem 1rem 0 0;
+		background: linear-gradient(
+			to bottom,
+			transparent var(--intro-peek),
+			hsl(var(--bg)) var(--intro-peek)
+		);
+		box-shadow: 0 -18px 60px rgb(15 23 42 / 0.16);
+		clip-path: inset(-60px 0 0 0);
+		scroll-margin-top: 6rem;
+	}
+
+	.content-sheet::before {
+		content: "";
+		position: absolute;
+		inset: 0 0 auto;
+		height: calc(var(--intro-peek) + 1px);
+		border-radius: inherit;
+		border-top: 1px solid hsl(var(--fg) / 0.1);
+		background: linear-gradient(
+			to bottom,
+			hsl(var(--bg) / 0.88),
+			hsl(var(--bg) / 0.97) 55%,
+			hsl(var(--bg))
+		);
+		-webkit-backdrop-filter: blur(18px);
+		backdrop-filter: blur(18px);
+		pointer-events: none;
+	}
+
+	.home-section {
+		margin: 0;
+		padding-block: 2rem;
+	}
+
+	.section-content {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.section-content > * {
+		margin-block: 0;
+	}
+
+	.home-intro {
+		display: flex;
+		align-items: center;
+		gap: 1.5rem;
+	}
+
+	.intro-portrait {
+		width: 8rem;
+		height: 8rem;
+	}
+
+	@media (max-width: 639px) {
+		.home-page {
+			--intro-peek: 12.5rem;
+		}
+
+		.home-intro {
+			gap: 1rem;
+		}
+
+		.intro-portrait {
+			width: 5rem;
+			height: 5rem;
+		}
 	}
 
 	@keyframes smooth-blink {
@@ -26,113 +121,157 @@ const latestPost = sortedPosts[0];
 	.animate-smooth-blink {
 		animation: smooth-blink 2s linear infinite;
 	}
+
+	@media (prefers-reduced-motion: reduce) {
+		:global(html) {
+			scroll-behavior: auto;
+		}
+
+		.hero-stage {
+			position: relative;
+		}
+
+		.hero-scene {
+			transform: none;
+			filter: none;
+		}
+
+		.animate-smooth-blink {
+			animation: none;
+		}
+	}
 </style>
 
-<BaseLayout title="Simon Gardier" activePage="home" fullWidth={true}>
-	<section class="w-full relative z-10">
-		<HeroContainer client:load />
+<BaseLayout
+	title="Simon Gardier - Computer Scientist"
+	description="Simon Gardier - Computer Scientist, computer vision, embedded systems, and machine learning."
+	activePage="home"
+	fullWidth={true}
+	type="profile"
+	structuredData={{
+		"@context": "https://schema.org",
+		"@type": "Person",
+		name: "Simon Gardier",
+		url: "https://sgardier.xyz/",
+		image: "https://sgardier.xyz/images/profile/profile.jpeg",
+		jobTitle: "Computer Scientist",
+		description: "Computer Scientist, computer vision, embedded systems, and machine learning.",
+		address: { "@type": "PostalAddress", addressCountry: "BE" },
+		sameAs: [
+			"https://github.com/simon-gardier",
+			"https://www.linkedin.com/in/simon-gardier/",
+			"https://scholar.google.com/citations?user=OuG3N-EAAAAJ&hl=en",
+		],
+	}}
+>
+	<div class="home-page" data-home-page>
+	<section class="hero-stage" aria-label="Pixel-art cloud landscape">
+		<div class="hero-scene" data-hero-scene>
+			<HeroContainer />
+		</div>
 	</section>
 
-	<main
-        class="w-full max-w-4xl mx-auto px-6 md:px-10 py-12 relative z-20 min-h-screen bg-bg transition-colors duration-300" id="main_index"
-	>
-        <section class="flex items-end justify-between gap-6 mb-6 mt-12">
-            <div class="flex-1">
-                <h3 class="text-2xl sm:text-3xl font-extrabold text-fg-dark m-0" id="hello_title">Hello,</h3>
-                <p class="text-base sm:text-lg leading-relaxed my-2 prose prose-neutral dark:prose-invert">
-                    This is the personal website of <span class="text-lg sm:text-xl font-bold text-fg-dark">Simon Gardier</span>.<span class="inline-block w-[7px] h-[1.1em] bg-neutral-400 dark:bg-neutral-300 ml-1 align-text-bottom animate-smooth-blink"></span>
-                </p>
-            </div>
-            <div class="flex-shrink-0">
-                <img
-                    src="/images/profile/profile.jpeg"
-                    alt="Simon Gardier portrait"
-                    class="w-32 h-32 sm:w-40 sm:h-40 object-cover rounded-xl border border-border rotate-3 hover:rotate-0 transition-transform duration-300 shadow-sm"
-                />
-            </div>
-        </section>
-
-		<section class="flex flex-wrap gap-3.5 my-6">
-			<a
-				href="/files/Simon_Gardier.pdf"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="btn hstack gap-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-fg-dark px-3 py-1.5 rounded-lg text-xs font-mono no-underline transition-colors"
-			>
-				<span class="i-lucide:rss text-xs text-sky-500"></span>
-				<span>Resume</span>
-			</a>
-			<a
-				href="mailto:gardiersimon@gmail.com"
-				class="btn hstack gap-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-fg-dark px-3 py-1.5 rounded-lg text-xs font-mono no-underline transition-colors"
-			>
-				<span class="i-ion:mail-outline text-xs text-sky-500"></span>
-				<span>Email</span>
-			</a>
-			<a
-				href="https://github.com/simon-gardier/"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="btn hstack gap-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-fg-dark px-3 py-1.5 rounded-lg text-xs font-mono no-underline transition-colors"
-			>
-				<span class="i-eva:github-outline text-xs"></span>
-				<span>GitHub</span>
-			</a>
-			<a
-				href="https://scholar.google.com.ni/citations?hl=en&user=OuG3N-EAAAAJ"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="btn hstack gap-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-fg-dark px-3 py-1.5 rounded-lg text-xs font-mono no-underline transition-colors"
-			>
-				<span class="i-academicons:google-scholar text-xs text-sky-500"
-				></span>
-				<span>Scholar</span>
-			</a>
-			<a
-				href="https://www.linkedin.com/in/simon-gardier/"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="btn hstack gap-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-fg-dark px-3 py-1.5 rounded-lg text-xs font-mono no-underline transition-colors"
-			>
-				<span class="i-radix-icons:linkedin-logo text-xs"></span>
-				<span>LinkedIn</span>
-			</a>
-		</section>
+	<main class="content-sheet" id="main_index">
+		<div class="relative w-full max-w-4xl mx-auto px-6 md:px-10">
+			<section class="home-section home-intro" data-home-intro aria-labelledby="hello_title">
+				<div class="section-content flex-1 min-w-0">
+					<h3 class="text-2xl sm:text-3xl font-extrabold text-fg-dark m-0" id="hello_title">Hello,</h3>
+					<p class="text-base sm:text-lg leading-relaxed prose prose-neutral dark:prose-invert">
+						This is the personal website of <span class="text-lg sm:text-xl font-bold text-fg-dark">Simon Gardier</span>.<span class="inline-block w-[7px] h-[1em] align-middle bg-neutral-400 dark:bg-neutral-300 ml-1 animate-smooth-blink"></span>
+					</p>
+					<div class="flex flex-wrap gap-3.5">
+						<a
+							href="/files/Simon_Gardier_Acad.pdf"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="btn gap-2 py-1.5 rounded-lg text-xs font-mono"
+						>
+							<span class="i-lucide:rss text-xs text-sky-500"></span>
+							<span>Resume</span>
+						</a>
+						<a
+							href="mailto:gardiersimon.dev@gmail.com"
+							class="btn gap-2 py-1.5 rounded-lg text-xs font-mono"
+						>
+							<span class="i-ion:mail-outline text-xs text-sky-500"></span>
+							<span>Email</span>
+						</a>
+						<a
+							href="https://github.com/simon-gardier/"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="btn gap-2 py-1.5 rounded-lg text-xs font-mono"
+						>
+							<span class="i-eva:github-outline text-xs"></span>
+							<span>GitHub</span>
+						</a>
+						<a
+							href="https://scholar.google.com.ni/citations?hl=en&user=OuG3N-EAAAAJ"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="btn gap-2 py-1.5 rounded-lg text-xs font-mono"
+						>
+							<span class="i-academicons:google-scholar text-xs text-sky-500"></span>
+							<span>Scholar</span>
+						</a>
+						<a
+							href="https://www.linkedin.com/in/simon-gardier/"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="btn gap-2 py-1.5 rounded-lg text-xs font-mono"
+						>
+							<span class="i-radix-icons:linkedin-logo text-xs"></span>
+							<span>LinkedIn</span>
+						</a>
+					</div>
+				</div>
+				<div class="flex-shrink-0">
+					<img
+						src="/images/profile/profile.jpeg"
+						alt="Simon Gardier portrait"
+						width="128"
+						height="128"
+						class="intro-portrait object-cover rounded-xl border border-border rotate-3 hover:rotate-0 transition-transform duration-300 shadow-sm"
+					/>
+				</div>
+			</section>
 
 		<section
-			class="prose prose-neutral dark:prose-invert max-w-none pt-8 my-8 space-y-4"
+			class="home-section section-content prose prose-neutral dark:prose-invert max-w-none"
 		>
 			<h3 class="text-xl font-bold text-fg-dark m-0">Bio</h3>
 			<p class="leading-relaxed">
-				I received a Bachelor's and Master's degree in <a href="https://www.programmes.uliege.be/cocoon/20252026/en/programmes/A2SSYS02_S.html" rel="noopener noreferrer">Computer Science
-				(finality “Intelligent Systems”)</a> from the <a href="https://www.uliege.be/" rel="noopener noreferrer">University of Liège
-				(ULiège)</a> - Belgium. During my studies, I joined <a href="https://42belgium.be/en/" rel="noopener noreferrer">School 42</a> in
-				Brussels. I was part of the <a href="https://robocup.uliege.be/" rel="noopener noreferrer">Robocup team of the Montefiore
-				Institute</a> (ULiège), where I worked on a biped robot, built from the ground up by the students. One notable contribution is the development of a bootloader software for the robot's servos. The project is under the supervision of <a href="https://people.montefiore.uliege.be/boigelot/" rel="noopener noreferrer">Prof. Bernard Boigelot</a>.
+				I earned a Bachelor's and Master's degree in <a href="https://www.programmes.uliege.be/cocoon/20252026/en/programmes/A2SSYS02_S.html" rel="noopener noreferrer">Computer Science (specialization: “Intelligent Systems”)</a>
+				from the <a href="https://www.uliege.be/" rel="noopener noreferrer">University of Liège</a> (ULiège), Belgium.
+				During my studies, I joined <a href="https://42belgium.be/en/" rel="noopener noreferrer">School 42</a> in Brussels.
+				I was part of the <a href="https://robocup.uliege.be/" rel="noopener noreferrer">RoboCup team at the Montefiore Institute</a> (ULiège),
+				where I worked on a biped robot built from the ground up by students. One notable contribution is the development of a bootloader software for the robot's servos.
+				The project is under the supervision of <a href="https://people.montefiore.uliege.be/boigelot/" rel="noopener noreferrer">Prof. Bernard Boigelot</a>.
 			</p>
 			<p class="leading-relaxed">
-				My master's thesis on 3D reconstruction and Novel View Synthesis using feed forward Gaussian
-				Splatting Networks was conducted in collaboration with <a href="https://evs.com/eu" rel="noopener noreferrer">EVS Broadcast
-				Equipment</a> (Grade: 17/20).
-				Previously, I interned at <a href="https://www.toyota-europe.com/about-us/toyota-in-europe/toyota-motor-europe" rel="noopener noreferrer">Toyota Motor Europe</a> to work on the personalization of <a href="https://arxiv.org/abs/2603.09771" rel="noopener noreferrer">Large Vision
-				Language Models</a> under the supervision of <a href="https://scholar.google.com/citations?user=YLh7yrwAAAAJ&hl=en" rel="noopener noreferrer">Rahaf AlJundi</a> and <a href="https://scholar.google.com/citations?user=JmQOYvQAAAAJ&hl=en" rel="noopener noreferrer">Soroush Seifi</a>.
+				My master's thesis on 3D reconstruction and Novel View Synthesis using feed-forward Gaussian Splatting Networks was conducted in collaboration
+				with <a href="https://evs.com/eu" rel="noopener noreferrer">EVS Broadcast Equipment</a> (Grade: 17/20).
+				Previously, I interned at <a href="https://www.toyota-europe.com/about-us/toyota-in-europe/toyota-motor-europe" rel="noopener noreferrer">Toyota Motor Europe</a> to work on
+				the personalization of <a href="https://arxiv.org/abs/2603.09771" rel="noopener noreferrer">Large Vision Language Models</a> under the supervision of
+				<a href="https://scholar.google.com/citations?user=YLh7yrwAAAAJ&hl=en" rel="noopener noreferrer">Rahaf AlJundi</a> and
+				<a href="https://scholar.google.com/citations?user=JmQOYvQAAAAJ&hl=en" rel="noopener noreferrer">Soroush Seifi</a>.
 			</p>
 			<p class="leading-relaxed">
 				Currently, I am located in Belgium (Europe).
 				Please check out my <a href="/projects">Projects</a> and <a href="/blog">Blog</a>, and feel free to reach out at
-				<i>gardiersimon at gmail dot com</i> :)
+				<i>gardiersimon dot dev at gmail dot com</i> :)
 			</p>
 		</section>
 
 		{
 			latestPost && (
-				<section class="pt-8 my-8 pb-4">
-					<h3 class="text-xl font-bold text-fg-dark tracking-wider mb-4">
+				<section class="home-section section-content">
+					<h3 class="text-xl font-bold text-fg-dark tracking-wider">
 						Latest Blog
 					</h3>
 					<a
 						href={`/blog/${latestPost.id}`}
-						class="block p-4 border border-border hover:border-sky-500/30 rounded-xl hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10 no-underline transition-all duration-300"
+						class="group block p-4 border border-border hover:border-sky-500/30 rounded-xl hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10 no-underline transition-all duration-300"
 					>
 						<div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-y-1">
 							<h5 class="text-base font-bold text-fg-dark group-hover:text-sky-500 transition-colors my-0">
@@ -157,15 +296,76 @@ const latestPost = sortedPosts[0];
 		}
 
 		<section
-			class="prose prose-neutral dark:prose-invert max-w-none pt-8 my-8 space-y-4"
+			class="home-section section-content prose prose-neutral dark:prose-invert max-w-none"
 		>
 			<h3 class="text-xl font-bold text-fg-dark m-0">Acknowledgments</h3>
-			The following projects have been important to the creation of this website:
+			<p>The following projects have been important to the creation of this website:</p>
 			<ul>
 				<li><a href="https://zxh.me/">https://zxh.me/</a>, an open-source portfolio, from which the structure and tech stack of this website is heavily inspired.</li>
 				<li><a href="https://craftpix.net/freebies/ocean-and-clouds-free-pixel-art-backgrounds/">https://craftpix.net/freebies/ocean-and-clouds-free-pixel-art-backgrounds/</a> from which the pixel-art of the hero component at the top of this page comes from.</li>
 				<li style={{ cursor: "url('/hero/cursor.png'), pointer" }}><a href="https://www.magnific.com/icon/wind_12414771">https://www.magnific.com</a> from which the wind cursor comes from.</li>
 			</ul>
 		</section>
+		</div>
 	</main>
+	</div>
 </BaseLayout>
+
+<script>
+	const home = document.querySelector<HTMLElement>("[data-home-page]");
+	const intro = document.querySelector<HTMLElement>("[data-home-intro]");
+	const scene = document.querySelector<HTMLElement>("[data-hero-scene]");
+
+	if (home && intro && scene) {
+		const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+		let frame = 0;
+		let lastProgress = -1;
+		let initialPositionSet = false;
+		const navigation = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+		const shouldSetInitialPosition = !location.hash && navigation?.type !== "back_forward";
+
+		const updateScene = () => {
+			frame = 0;
+			const heroHeight = scene.offsetHeight;
+			const revealDistance = Math.max(1, heroHeight - intro.offsetHeight);
+			const progress = Math.min(1, Math.max(0, -home.getBoundingClientRect().top / revealDistance));
+			if (progress === lastProgress) return;
+			lastProgress = progress;
+			scene.style.setProperty("--hero-offset", `${-progress * heroHeight * 0.04}px`);
+			scene.style.setProperty("--hero-blur", `${progress * 6}px`);
+		};
+
+		const queueUpdate = () => {
+			if (!frame && !reducedMotion.matches) frame = requestAnimationFrame(updateScene);
+		};
+
+		// Match the overlap to the real introduction, including wrapped text and font changes.
+		const introObserver = new ResizeObserver(() => {
+			home.style.setProperty("--intro-peek", `${intro.getBoundingClientRect().height}px`);
+			if (!initialPositionSet && shouldSetInitialPosition && window.scrollY === 0) {
+				initialPositionSet = true;
+				requestAnimationFrame(() => window.scrollTo(0, intro.getBoundingClientRect().height));
+			}
+			lastProgress = -1;
+			queueUpdate();
+		});
+		introObserver.observe(intro);
+
+		const handleMotionPreference = () => {
+			cancelAnimationFrame(frame);
+			frame = 0;
+			lastProgress = -1;
+			if (reducedMotion.matches) {
+				scene.style.removeProperty("--hero-offset");
+				scene.style.removeProperty("--hero-blur");
+			} else {
+				queueUpdate();
+			}
+		};
+
+		window.addEventListener("scroll", queueUpdate, { passive: true });
+		window.addEventListener("resize", queueUpdate, { passive: true });
+		reducedMotion.addEventListener("change", handleMotionPreference);
+		queueUpdate();
+	}
+</script>

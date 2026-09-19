@@ -12,7 +12,6 @@ const blogData = allPosts.map(post => ({
   description: post.data.description,
   link: `/blog/${post.id}`,
   tags: post.data.tags || [],
-  type: 'Blog Post'
 }));
 
 const projectData = allProjects.map(project => ({
@@ -20,20 +19,18 @@ const projectData = allProjects.map(project => ({
   description: project.data.description,
   link: '/projects',
   tags: project.data.techStack || [],
-  type: 'Project'
 }));
 
 const pubData = allPubs.map(pub => ({
   title: pub.data.title,
-  description: `${pub.data.journal || 'Publication'}${pub.data.authors?.length ? ` - Authors: ${pub.data.authors.join(', ')}` : ''}`,
+  description: `${pub.data.publisher || 'Publication'}${pub.data.authors?.length ? ` - Authors: ${pub.data.authors.join(', ')}` : ''}`,
   link: '/publications',
   tags: pub.data.authors || [],
-  type: 'Publication'
 }));
 
 const searchableData = [...blogData, ...projectData, ...pubData];
 ---
-<BaseLayout title="Simon Gardier - Search" activePage="search">
+<BaseLayout title="Simon Gardier - Search" description="Search Simon Gardier's blog posts, projects, and publications." robots="noindex,follow">
   <main class="max-w-2xl mx-auto py-4">
     <div class="mb-8 text-center md:text-left">
       <h1 class="text-3xl md:text-4xl font-extrabold text-fg-dark my-0">Search</h1>

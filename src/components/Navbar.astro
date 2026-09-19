@@ -24,7 +24,7 @@ const menuItems = [
     </a>
     <nav class="hidden md:flex items-center gap-x-5 font-mono">
       <a
-        class={`nav-item no-underline transition-colors cursor-pointer flex items-center text-black dark:text-white text-lg}`}
+        class={`nav-item no-underline transition-colors cursor-pointer flex items-center text-black dark:text-white text-lg`}
         href="/"
         aria-label="Home"
       >
@@ -32,7 +32,7 @@ const menuItems = [
       </a>
 
       <a
-        class={`nav-item no-underline transition-colors cursor-pointer flex items-center ${activePage === "publications" ? "nav-active !text-sky-500" : ""}`}
+        class={`nav-item no-underline transition-colors cursor-pointer flex items-center ${activePage === "publications" ? "nav-active" : ""}`}
         href="/publications"
         aria-label="Publications"
       >
@@ -40,7 +40,7 @@ const menuItems = [
       </a>
 
       <a
-        class={`nav-item no-underline transition-colors cursor-pointer relative flex items-center gap-1 ${activePage === "blog" ? "nav-active !text-sky-500" : ""}`}
+        class={`nav-item no-underline transition-colors cursor-pointer relative flex items-center gap-1 ${activePage === "blog" ? "nav-active" : ""}`}
         href="/blog"
         aria-label="Blog"
       >
@@ -55,7 +55,7 @@ const menuItems = [
       </a>
 
       <a
-        class={`nav-item no-underline transition-colors cursor-pointer flex items-center ${activePage === "projects" ? "nav-active !text-sky-500" : ""}`}
+        class={`nav-item no-underline transition-colors cursor-pointer flex items-center ${activePage === "projects" ? "nav-active" : ""}`}
         href="/projects"
         aria-label="Projects"
       >
@@ -63,7 +63,7 @@ const menuItems = [
       </a>
 
       <a
-        class={`p-1.5 rounded-full bg-bg-dark/40 border border-white/15 text-fg-light hover:text-fg-dark transition-all duration-200 cursor-pointer flex items-center ${activePage === "search" ? "nav-active !text-sky-500 border-sky-500/20 bg-bg-dark/50" : ""}`}
+        class={`p-1.5 rounded-full bg-bg-dark/40 border border-white/15 text-fg-light hover:text-fg-dark transition-all duration-200 cursor-pointer flex items-center ${activePage === "search" ? "font-bold" : ""}`}
         href="/search"
         aria-label="Search"
       >
@@ -101,7 +101,7 @@ const menuItems = [
     <nav class="flex flex-col gap-1 p-2 text-sm font-mono" aria-label="Mobile navigation">
       {menuItems.map((item, i) => (
         <a
-          class={`menu-item no-underline flex items-center gap-3 px-4 py-3 rounded-2xl text-fg hover:text-fg-dark hover:bg-white/40 dark:hover:bg-white/10 transition-colors ${activePage === item.label.toLowerCase() ? "!text-sky-500 bg-white/40 dark:bg-white/10" : ""}`}
+          class={`menu-item no-underline flex items-center gap-3 px-4 py-3 rounded-2xl text-fg hover:text-fg-dark hover:bg-white/40 dark:hover:bg-white/10 transition-colors ${activePage === item.label.toLowerCase() ? "nav-active text-fg-dark" : ""}`}
           href={item.href}
           style={`--i: ${i}`}
         >
@@ -123,6 +123,15 @@ const menuItems = [
   </div>
 </header>
 <style>
+  .nav-active {
+    text-decoration-line: underline !important;
+    text-decoration-style: wavy !important;
+    text-decoration-color: currentColor;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 4px;
+    font-weight: 700;
+  }
+
   @keyframes breathe {
     0%, 100% {
       transform: scale(1);

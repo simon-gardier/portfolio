@@ -1,11 +1,8 @@
 import {
   defineConfig,
   presetWind3,
-  presetAttributify,
   presetIcons,
-  presetTypography,
-  transformerDirectives,
-  transformerVariantGroup
+  presetTypography
 } from "unocss";
 
 const DEFAULT_FONTS = "Roboto";
@@ -15,17 +12,10 @@ export default defineConfig({
     {
       "flex-center": "flex items-center justify-center",
       hstack: "flex items-center",
-      vstack: "hstack flex-col",
       "inline-hstack": "inline-flex items-center",
-      "prose-lg": "lg:text-lg max-w-content",
       "nav-item": "underline-offset-4 text-fg hover:text-fg-dark transition-colors duration-200",
-      "nav-active": "underline decoration-wavy text-sky-500 font-semibold",
-      btn: "hstack gap-x-1 rounded px-3 py-1 transition-colors decoration-none text-sm bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 !text-fg",
-      "add-ring": "ring-offset-bg outline-none ring-2 ring-primary ring-offset-2",
-      "theme-icon": "absolute transition-transform duration-500",
-      "theme-icon-cur": "scale-100 rotate-0",
-      "theme-icon-prev": "scale-0 -rotate-90",
-      "theme-icon-next": "scale-0 rotate-90"
+      "nav-active": "!underline decoration-wavy underline-offset-4 font-bold",
+      btn: "hstack gap-x-1 rounded px-3 py-1 transition-colors decoration-none text-sm bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 !text-fg"
     }
   ],
   preflights: [
@@ -38,7 +28,6 @@ export default defineConfig({
           --bg: 0 0% 100%;
           --bg-dark: 0 0% 95%;
           --border: 0 0% 88%;
-          --primary: 215 90% 45%;
         }
 
         .dark {
@@ -48,7 +37,6 @@ export default defineConfig({
           --bg: 0 0% 12%;
           --bg-dark: 0 0% 20%;
           --border: 0 0% 28%;
-          --primary: 215 85% 65%;
         }
 
         body {
@@ -64,22 +52,15 @@ export default defineConfig({
         * {
           border-color: hsl(var(--border));
         }
-
-        .parallax-layer {
-          will-change: transform;
-          transform: translate3d(0, 0, 0);
-        }
       `
     }
   ],
   theme: {
     fontFamily: {
       sans: DEFAULT_FONTS,
-      ui: DEFAULT_FONTS,
       mono: DEFAULT_FONTS
     },
     colors: {
-      content: "global",
       fg: {
         DEFAULT: "hsl(var(--fg))",
         light: "hsl(var(--fg-light))",
@@ -89,22 +70,15 @@ export default defineConfig({
         DEFAULT: "hsl(var(--bg))",
         dark: "hsl(var(--bg-dark))"
       },
-      border: "hsl(var(--border))",
-      primary: "hsl(var(--primary))"
+      border: "hsl(var(--border))"
     }
   },
-  presets: [
-    presetWind3(),
-    presetAttributify(),
-    presetIcons({
+  presets: [presetWind3(), presetIcons({
       scale: 1.2,
       warn: true,
       extraProperties: {
         display: "inline-block",
         "vertical-align": "sub"
       }
-    }),
-    presetTypography()
-  ],
-  transformers: [transformerDirectives(), transformerVariantGroup()]
+    }), presetTypography()]
 });

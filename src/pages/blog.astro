@@ -18,7 +18,14 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 const allTags = Array.from(new Set(allPosts.flatMap(post => post.data.tags || []))).sort();
 ---
 
-<BaseLayout title="Simon Gardier - Blog" description="Personal blog articles of Simon Gardier covering software engineering, embedded systems, and machine learning." activePage="blog">
+<BaseLayout title="Simon Gardier - Blog" description="Technical articles by Simon Gardier about software engineering, embedded systems, computer vision, and machine learning." activePage="blog" structuredData={{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Simon Gardier Blog",
+  url: "https://sgardier.xyz/blog",
+  description: "Technical articles by Simon Gardier about software engineering, embedded systems, computer vision, and machine learning.",
+  isPartOf: { "@type": "WebSite", name: "Simon Gardier", url: "https://sgardier.xyz/" },
+}}>
   <div class="max-w-4xl mx-auto py-4">
     <div class="mb-10 text-center md:text-left prose prose-neutral dark:prose-invert">
       <h1 class="text-3xl md:text-4xl font-extrabold text-fg-dark my-0">Blog Posts</h1>

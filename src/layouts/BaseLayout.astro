@@ -7,14 +7,36 @@ export interface Props {
   description?: string;
   activePage?: string;
   fullWidth?: boolean;
+  canonical?: string;
+  image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article' | 'profile';
+  publishedAt?: Date;
+  modifiedAt?: Date;
+  robots?: string;
+  structuredData?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
 const {
   title = "Simon Gardier",
-  description = "Welcome on Simon Gardier's website!",
+  description = "Simon Gardier — computer scientist, software engineer, and researcher in computer vision, embedded systems, and machine learning.",
   activePage = "home",
-  fullWidth = false
+  fullWidth = false,
+  canonical,
+  image = "/hero/hero.png",
+  imageAlt = "Pixel-art sky from Simon Gardier's portfolio",
+  type = "website",
+  publishedAt,
+  modifiedAt,
+  robots,
+  structuredData,
 } = Astro.props;
+
+const siteUrl = "https://sgardier.xyz";
+const canonicalUrl = canonical
+  ? new URL(canonical, siteUrl).toString()
+  : new URL(Astro.url.pathname, siteUrl).toString();
+const imageUrl = new URL(image, siteUrl).toString();
 ---
 
 <!doctype html>
@@ -23,15 +45,30 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    
     <title>{title}</title>
     <meta name="title" content={title} />
     <meta name="description" content={description} />
+    <link rel="icon" type="image/png" href="/images/logo-head.png" />
+    <link rel="canonical" href={canonicalUrl} />
+    {robots && <meta name="robots" content={robots} />}
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta property="og:image:width" content="3072" />
+    <meta property="og:image:height" content="1500" />
+    <meta property="og:image:type" content="image/png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+    {publishedAt && <meta property="article:published_time" content={publishedAt.toISOString()} />}
+    {modifiedAt && <meta property="article:modified_time" content={modifiedAt.toISOString()} />}
 
     <link rel="alternate" type="application/rss+xml" title="Simon Gardier RSS Feed" href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
@@ -39,6 +76,8 @@ const {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    {structuredData && <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />}
 
     <style is:global>
       .text-rose-500, .group-hover\:text-rose-500:hover, .hover\:text-rose-500:hover, .text-sky-500, .group-hover\:text-sky-500:hover, .hover\:text-sky-500:hover {
@@ -49,9 +88,6 @@ const {
       }
       .border-rose-500\/30, .border-sky-500\/30 {
         border-color: hsla(200, 90%, 50%, 0.3) !important;
-      }
-      .animate-pulse {
-        animation: pulse 1.2s steps(2, start) infinite;
       }
     </style>
 
@@ -65,7 +101,7 @@ const {
       checkTheme();
     </script>
   </head>
-  <body class="bg-bg text-fg min-h-screen flex flex-col font-sans transition-colors duration-300">
+  <body class="bg-bg text-fg min-h-screen flex flex-col font-sans">
     <Navbar activePage={activePage} />
     
     {fullWidth ? (

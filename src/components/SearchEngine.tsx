@@ -1,4 +1,4 @@
-import { createSignal, createEffect, For, Show } from "solid-js";
+import { createSignal, createMemo, For, Show } from "solid-js";
 import Fuse from "fuse.js";
 
 export interface SearchItem {
@@ -6,7 +6,6 @@ export interface SearchItem {
   description: string;
   link: string;
   tags: string[];
-  type: string; // 'Blog Post' | 'Project' | 'Publication'
 }
 
 interface SearchEngineProps {
@@ -15,7 +14,6 @@ interface SearchEngineProps {
 
 export default function SearchEngine(props: SearchEngineProps) {
   const [query, setQuery] = createSignal("");
-  const [results, setResults] = createSignal<SearchItem[]>([]);
 
   const fuseOptions = {
     keys: [
@@ -27,20 +25,12 @@ export default function SearchEngine(props: SearchEngineProps) {
     distance: 100
   };
 
-  let fuse = new Fuse(props.data, fuseOptions);
-  
-  createEffect(() => {
-    fuse = new Fuse(props.data, fuseOptions);
-  });
+  const fuse = createMemo(() => new Fuse(props.data, fuseOptions));
 
-  createEffect(() => {
+  // Derive results during server rendering too, so the initial page shows every item.
+  const results = createMemo(() => {
     const q = query().trim();
-    if (!q) {
-      setResults(props.data);
-    } else {
-      const searchResults = fuse.search(q);
-      setResults(searchResults.map((r) => r.item));
-    }
+    return q ? fuse().search(q).map((r) => r.item) : props.data;
   });
 
   return (
@@ -78,52 +68,30 @@ export default function SearchEngine(props: SearchEngineProps) {
       {/* Search Results Layout */}
       <div class="space-y-4">
         <For each={results()}>
-          {(item) => {
-            const typeColors = () => {
-              switch (item.type) {
-                case "Blog Post":
-                  return "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/15";
-                case "Project":
-                  return "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/15";
-                case "Publication":
-                  return "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/15";
-                default:
-                  return "bg-neutral-500/10 text-neutral-600 border-neutral-500/15";
-              }
-            };
-
-            return (
-              <a
-                href={item.link}
-                class="block border border-border rounded-xl p-4 md:p-5 hover:border-sky-500/30 hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10 transition-all duration-200 no-underline cursor-pointer group"
-              >
-                <div class="flex items-center justify-between gap-3 mb-2">
-                  {/* Segment Title */}
-                  <h3 class="text-base md:text-lg font-bold text-fg-dark group-hover:text-sky-500 transition-colors my-0 leading-tight">
-                    {item.title}
-                  </h3>
+          {(item) => (
+            <a
+              href={item.link}
+              class="block border border-border rounded-xl p-4 md:p-5 hover:border-sky-500/30 hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10 transition-all duration-200 no-underline cursor-pointer group"
+            >
+              <h3 class="text-base md:text-lg font-bold text-fg-dark group-hover:text-sky-500 transition-colors my-0 leading-tight">
+                {item.title}
+              </h3>
+              <p class="text-sm text-fg-light my-2 line-clamp-2 leading-relaxed">
+                {item.description}
+              </p>
+              <Show when={item.tags.length > 0}>
+                <div class="flex flex-wrap gap-1 mt-3">
+                  <For each={item.tags}>
+                    {(tag) => (
+                      <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-fg-light">
+                        {tag}
+                      </span>
+                    )}
+                  </For>
                 </div>
-
-                {/* Description content */}
-                <p class="text-sm text-fg-light my-2 line-clamp-2 leading-relaxed">
-                  {item.description}
-                </p>
-
-                {/* Matching Tags / Keywords */}
-                <Show when={item.tags.length > 0}>
-                  <div class="flex flex-wrap gap-1 mt-3">
-                    <For each={item.tags}>
-                      {(tag) => (
-                        <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-fg-light">
-                          {tag}
-                        </span>
-                      )}
-                    </For>
-                  </div>
-                </Show>
-              </a>
-            );
-          }}
+              </Show>
+            </a>
+          )}
         </For>
 
         {/* Zero results state */}

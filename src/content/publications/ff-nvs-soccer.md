@@ -1,8 +1,11 @@
 ---
 title: "Feed-Forward Novel View Synthesis For Soccer Scenes With Priors"
 authors: ["Simon Gardier", "Cédric Hons", "Floriane Magera", "Quentin Massoz", "Anthony Cioppa"]
+publisher: "Master's thesis in Computer Science, University of Liège, Montefiore Institute (FACSA), published on MatheO"
 publishedAt: 2026-07-01
-link: "http://hdl.handle.net/2268.2/26108"
+link:
+  url: "http://hdl.handle.net/2268.2/26108"
+  text: "Thesis link"
 image: "/images/publications/ff-nvs-soccer.png"
 ---
 
