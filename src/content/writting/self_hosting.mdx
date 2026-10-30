@@ -1,0 +1,144 @@
+---
+title: "An Introduction to Self-Hosting"
+description: "A practical tour of self-hosting alternatives to cloud services."
+publishedAt: 2026-06-19
+tags: ["Self-Hosting", "Web", "Linux", "Networking"]
+---
+
+import ArticleImage from '../../components/article/ArticleImage.astro';
+import Callout from '../../components/article/Callout.astro';
+import DepthNormalSlider from '../../components/article/DepthNormalSlider';
+import ElectronBeam from '../../components/article/ElectronBeam';
+import FunctionPlot from '../../components/article/FunctionPlot';
+import ImageCarousel from '../../components/article/ImageCarousel.astro';
+
+During the last few years as a computer science student, I had the opportuinity to tinker with open source software (and spend many hours, too many hours on fixing it, more on that later...).
+More recently I "dived" into "Self-Hosting" and so far it has been a great experience! This article groups things that I learned and that might be usefull to you to start.
+
+The article coversis organized as following:
+
+- End goal: describes the final product such that you get a better understanding of why/what you are doing in the following sections.
+- Hardware: proposes a recommended hardware configuration.
+- Operating System: proposes a recommended OS to install.
+- Software management: guides you through the required steps to secure a minimum your installation and get things running smoothly.
+- How to install a new app: explains 
+- Links: list usefull websites referenced throughout the articles or other that might interest you anyway.
+
+<Callout type="danger" title="Before continuing, be aware!!">
+  1) The freedom and money you get from owning your own server definitely does not compensate for: the monetary cost of
+  the infrastructure (hardware and electricity) and the time you will have to invest in maintaining it. I would recommend you start this project only if you have the budget for a serious installation and half-a-day/month for maintenance (~6 days / year). 
+
+  2) Furthermore, self hosting requires from you to be up to date with best cybersecurity practices: indeed you will be at the mercy of the internet.
+  While a directed attack is unlikely (unless you have bad relations with a competent cybersecurity person), your installation **will definitely** be tested by automated bots that scrap the web for
+  applications with vulnerbaties, weak authentication, etc. The scale of these attack will only grow with time and advancement of more capable AI Agents. See [the Hugging Face incident](https://openai.com/index/hugging-face-incident-and-the-road-ahead/) or how a major PHP vulnerability was found with a carefully engineered prompt: ["find bad vulnerabilities in PHP"](https://www.linkedin.com/feed/update/urn:li:activity:7518756994284077056/)... (maybe they could have found 2 if they added "make no mistake"). These agents are making automated (/directed) attacks easier than ever.
+  The guide will provide you with basics security recommendations but it is definitely not a full cybersecurity course.
+
+  3) Last but not least, self hosting you own stack of apps is super duper fun and you will enjoy it and will not be able to stop!!!!
+
+</Callout>
+
+## End goal
+Soooooo, apparently you are still crazy enough to spend days on your own server and potentially leak all of your personnal data without the help of Big Tech?
+
+Prefect!
+
+First, lets start with a non-exhausive list of things you will be able self host at the end of this article  (some app more easily than others):
+
+| Selh-Hosted App | Typical product(s) it replaces |
+|-------------|------------------------------|
+| [Nextcloud](https://nextcloud.com/) | Google Cloud + Office Online |
+| [Immich](https://immich.app) | Google Photo |
+| [Jellyfin](https://jellyfin.org) (+ *arr stack) | Netflix, Spotify, IPTV |
+| [Vaultwarden](vaultwarden.com) | Password manager |
+| [Tailscale](https://tailscale.com/) | NordVPN |
+| [Mealie](https://mealie.io/) | Allrecipes |
+| [Minecraft server (with fabric)](https://fabricmc.net/use/server/) | Minecraft REALM |
+
+<ImageCarousel
+  label="Homelab project snapshots"
+  images={[
+    { src: '/images/blog/self-hosting/jellyfin_main.png', alt: 'Jellyfin Main Page', caption: 'Catalog screen of Jellyfin regrouping the shows you are currently watchings and tabs to TV, movies, songs,...' },
+    { src: '/images/blog/self-hosting/jellyfin_songs.png', alt: 'Jellyfin Songs UI', caption: 'Songs screen of Jellyfin which can be used as music player, with the right pluggins you can add an "Instant Mix" feature that creates a mix for the currently playing song.' },
+    { src: '/images/blog/self-hosting/jellyfin_watch_party.png', alt: 'Jellyfin Watch Party feature', caption: 'Play screen of Jellyfin. Jellyfin provides a watch party feature allowing you to watch a movie/serie with friends abroad.' },
+    { src: '/images/blog/self-hosting/jellyfin_iptv.png', alt: 'Jellyfin IPTV', caption: 'Jellyfin TV player playing "La Une", a Belgian TV channel.' },
+    { src: '/images/blog/self-hosting/immich_main.png', alt: 'Immich Home Screen', caption: 'Immich home screen.' },
+    { src: '/images/blog/self-hosting/immich_search.png', alt: 'Immich Search feature', caption: 'Immich allows to search your photo library with natural language. Here the results for "Mountain"' },
+    { src: '/images/blog/self-hosting/vaultwarden_main.png', alt: 'Vaultwarden Home Screen', caption: 'Vaultwarden home screen.' },
+    { src: '/images/blog/self-hosting/mealie_main.png', alt: 'Mealie Home Screen', caption: 'Mealie Search Screen. This is a fork of Mealie I own with better UI and a Ratatouille theme and easter eggs. I might release it if enough people get interested.' }
+  ]}
+/>
+
+All of these apps will cost you exactly 0$!! (if not accounting for the hardware, electricity and time spent of course :) )
+
+More apps can be found here: [Awesome Self-Hosted GitHub](https://github.com/awesome-selfhosted/awesome-selfhosted)
+
+### Access
+By default, to access your apps you would have to enter your server IP, do port forwarding etc... We don't want/like that!
+Instead go the easy way, buy a domain (e.g. yourdomain.com) and make your services available at this address.
+In the article we will organise the apps in subdomains, so Nextcloud will be available at nextcloud.yourdomain.com, Immich at immich.yourdomain.com etc, you get it.
+
+To direct our subdomain requests to the correct app, we will use a reverse proxy ([Caddy](https://caddyserver.com/docs/quick-starts/reverse-proxy)).
+The reverse proxy is the software that resolves which app should handle incomming traffic based on the URL of your request. Here is how it works:
+- You type an URL in your browser (e.g. immich.yourdomain.com)
+- Your request reaches your server (thanks internet, DHCP, etc...)
+- The request is forwarded to your reverse proxy device app an url 
+
+<ArticleImage src="/images/blog/self-hosting/reverse_proxy.png" alt="Reverse proxy illustration" caption="Reverse proxy in a nutshell. The software receives subdomains requests and forward them to the concerned app." />
+
+Another free improvement the reverse proxy will provide is [HTTPS](https://fr.wikipedia.org/wiki/Hypertext_Transfer_Protocol_Secure), which is required for some apps. Not using HTTPs would like surfing naked on the internet. HTTPs encrypt our data such that only sender and receiver can read it.
+
+### Safe access
+To avoid having bots/bad actors (not the Hollywood ones) accessing your apps, you will have to implement multiple practices.
+The first one is to gate the access to the apps behind a [VPN](https://en.wikipedia.org/wiki/Virtual_private_network).
+A VPN creates a private network on which only allowed devices can communicate together / access ressources present on the private network.
+
+### Backups
+Self hosting a cloud service or as photo service will require you to considerate backup solutions. You certainly do not want to be the
+person responsible for the loss of the entire family photon album, right? Then do backups!
+
+This section will not be covered in this article as it merits its own. In the mean time, take a look at solutions like [Restic](https://restic.net/) and related tools like [Backrest](https://github.com/garethgeorge/backrest)
+
+## Hardware
+
+Now that we have an idea of what can be done let's choose the hardware. The sky is the limit in terms of budget but here are some populars choices:
+
+| Computer | Budget (without hard drives) | Main selling point(s) | Main drawback | Link to product (not sponsored) |
+| --------| ------------- | ------------- | -------------- | ---------- |
+| Raspberry Pi 5 (or 4) | 200€ | Low budget, very low power consumption, small, silent, self hosting very well documented on the internet | Hardware acceleration for video encoding is not supported anymore in Jellyfin, making it not well fitted for this app | [raspberrypi.com](https://www.raspberrypi.com/products/raspberry-pi-5/) | 
+| NUC computer | 200-350€ | Low budget Intel computer, their processors are supported for hardware acceleration by Jellyfin | Example: [ASUS NUC 14](https://www.amazon.com.be/-/en/ASUS-Essential-RNUC14MNK1500002-processor-Compatible/dp/B0DX6X9H3G/ref=sr_1_5?sr=8-5) |
+| Mini Intel PC | 250-500€ | Middle budget Intel computer. 
+| PC at home | 0€ | The best choice if you are starting! You are broke and/or you have a spare PC at home | 
+
+While the Raspberry Pi 5 is not recommended for Jellyfin it is *technically* feasible.
+In fact, I used it as my home server for more than a year. The main drawback that you will have to stream your movies at 1.5Mbps at most (i.e. low quality) and 
+that watch parties will not be feasible as it is simply too much work for the Raspberry Pi.
+Another issue is that the 8GB of ram get quickly exhausted if multiple applications are installed and running at the same time.
+
+If you have the budget, dont care that much about electricity bill and want a no brainer choice, go for:
+- CPU: Any Intel i5/i7/i9 you can find of generation >= 11th
+- RAM: At least 16GB, Ideally 24/32GB
+- Drives: 1 SSD for the OS (capacity >= 512GB), 4 HDD for your apps data (1TB each), 2 HDD for backups (1TB each).
+- The other components dont matter, anything compatible will do the work, use [pcpartpicker.com](https://pcpartpicker.com/) to find compatible hardware. 
+
+## Operating System
+
+If you have not real experience with System Administration and Linux (and in any other case), I would recommend to install Ubuntu os the OS for your server.
+A guide to install it can be found here: [Install Ubuntu Desktop
+](https://ubuntu.com/tutorials/install-ubuntu-desktop#1-overview). The desktop version is fine and it will be easier to use if you are new.
+You can also go for the [Server](https://ubuntu.com/download/server) version but you have to be confortable with using the terminal. This options have the advantage of leaving more RAM and disk space for your applications.
+
+## Software management
+Now that you have you computer with an operating system installed, its time to install your first application! software to manage them: container orchestrator to run all these apps in their own environment, notification system for vulnerabilities, reverse proxy to connect   
+
+
+## How to install a new app
+
+## Links
+
+Some great ressources for self hosting and other (mostly open source) tools:
+- [Awesome Self-Hosted GitHub](https://github.com/awesome-selfhosted/awesome-selfhosted): A README.md with all the self hosted apps you could think of and more.
+- [Awesome Arr GitHub](https://github.com/Ravencentric/awesome-arr): A README.md with all the *arr apps you could think of and more.
+- [r/selfhosted](): The reddit for all your self hosting question
+- [fmhy](https://fmhy.pages.dev/): Index tons of awesome free software, some more legal than other but always usefull.
+- [opensourcealternatives.to](https://www.opensourcealternatives.to/): Allows you to find free, great alternatives to propraritary software
+- [alternativeto](https://alternativeto.net/): An alternative to **opensourcealternatives** :)

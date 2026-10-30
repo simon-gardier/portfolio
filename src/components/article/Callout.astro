@@ -1,0 +1,22 @@
+---
+interface Props {
+  type?: 'info' | 'success' | 'danger' | 'warning';
+  title?: string;
+}
+
+const { type = 'info', title } = Astro.props;
+---
+
+<aside class={`article-callout article-callout-${type}`} role="note">
+  {title && <strong>{title}</strong>}
+  <div><slot /></div>
+</aside>
+
+<style>
+  .article-callout { margin: 1.5rem 0; padding: 1rem 1.1rem; border: 1px solid; border-radius: 0.35rem; font-size: 0.95rem; }
+  .article-callout strong { display: block; margin-bottom: 0.25rem; color: hsl(var(--fg-dark)); }
+  .article-callout-info { border-color: hsl(200 95% 48% / 0.55); background: hsl(200 95% 48% / 0.14); }
+  .article-callout-success { border-color: hsl(145 55% 42% / 0.55); background: hsl(145 55% 42% / 0.14); }
+  .article-callout-warning { border-color: hsl(0 70% 55% / 0.55); background: hsl(0 70% 55% / 0.14); }
+  .article-callout-danger { border-color: hsl(0 70% 55% / 0.55); background: hsl(0 70% 55% / 0.14); }
+</style>

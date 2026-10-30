@@ -1,0 +1,140 @@
+---
+interface CarouselImage {
+  src: string;
+  alt: string;
+  caption?: string;
+}
+
+interface Props {
+  images: CarouselImage[];
+  label?: string;
+}
+
+const { images, label = 'Image carousel' } = Astro.props;
+---
+
+<div class="article-carousel not-prose" data-carousel aria-label={label} tabindex="0">
+  <div class="article-carousel-frame">
+    <div class="article-carousel-viewport">
+      <div class="article-carousel-track">
+        {images.map((image, index) => (
+          <figure class="article-carousel-slide" data-slide={index} data-caption={image.caption ?? ''} aria-hidden={index !== 0}>
+            <a class="article-carousel-image" href={image.src} data-pswp-width="1600" data-pswp-height="1000" data-caption={image.caption ?? ''} aria-label={`Open ${image.alt} in full screen`}>
+              <img src={image.src} alt={image.alt} loading={index === 0 ? 'eager' : 'lazy'} />
+              <span class="article-carousel-fullscreen" aria-hidden="true">+</span>
+            </a>
+          </figure>
+        ))}
+      </div>
+    </div>
+    <button class="article-carousel-control previous" type="button" data-previous aria-label="Previous image"></button>
+    <button class="article-carousel-control next" type="button" data-next aria-label="Next image"></button>
+  </div>
+  <p class="article-carousel-caption" data-caption aria-live="polite">{images[0]?.caption}</p>
+  <div class="article-carousel-dots" data-dots aria-label="Choose an image"></div>
+</div>
+
+<style>
+  .article-carousel { position: relative; margin: 2rem 0; }
+  .article-carousel-frame { position: relative; overflow: hidden; border: 1px solid hsl(var(--border)); border-radius: 0.75rem; background: hsl(var(--bg-dark) / 0.35); box-shadow: 0 0.75rem 2rem hsl(0 0% 0% / 0.08); }
+  .article-carousel-viewport { overflow: hidden; }
+  .article-carousel-track { display: flex; }
+  .article-carousel-slide { flex: 0 0 100%; margin: 0; }
+  .article-carousel-image { position: relative; display: block; cursor: zoom-in; }
+  .article-carousel-slide img { display: block; width: 100%; height: 20rem; object-fit: cover; }
+  .article-carousel-fullscreen { position: absolute; right: 0.75rem; bottom: 0.75rem; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 999px; background: hsl(var(--bg) / 0.8); color: hsl(var(--fg-dark)); font-size: 1.4rem; line-height: 1; opacity: 0.9; }
+  :global(.pswp__custom-caption) { position: absolute; right: 1rem; bottom: 1rem; left: 1rem; z-index: 10000; max-width: 48rem; margin: auto; padding: 0.65rem 1rem; border-radius: 0.35rem; background: hsl(0 0% 0% / 0.65); color: white; font-size: 0.9rem; line-height: 1.4; text-align: center; pointer-events: none; }
+  .article-carousel-control { position: absolute; top: 50%; display: grid; place-items: center; width: 3.5rem; height: 4.5rem; padding: 0; border: 0; border-radius: 0; background: transparent; color: hsl(var(--fg-dark)); font-size: 0; line-height: 0; transform: translateY(-50%); cursor: pointer; transition: opacity 160ms ease; }
+  .article-carousel-control::before { width: 0.8rem; height: 0.8rem; border-top: 2px solid currentColor; border-left: 2px solid currentColor; content: ''; }
+  .article-carousel-control.previous::before { transform: rotate(-45deg); }
+  .article-carousel-control.next::before { transform: rotate(135deg); }
+  .article-carousel-control:hover { background: transparent; }
+  .article-carousel-control.previous { left: 0.75rem; }
+  .article-carousel-control.next { right: 0.75rem; }
+  .article-carousel-caption { min-height: 1.25rem; margin: 0.8rem 0 0; color: hsl(var(--fg-light)); font-size: 0.8rem; line-height: 1.5; text-align: center; }
+  .article-carousel-dots { display: flex; justify-content: center; gap: 0.4rem; padding: 0.65rem 0 0; }
+  .article-carousel-dots button { width: 0.45rem; height: 0.45rem; padding: 0; border: 0; border-radius: 999px; background: hsl(var(--fg-light)); opacity: 0.4; cursor: pointer; }
+  .article-carousel-dots button[aria-current='true'] { background: hsl(200 95% 48%); opacity: 1; }
+  :global(.pswp__button--zoom) { display: none !important; }
+  @media (max-width: 640px) {
+    .article-carousel-slide img { height: 15rem; }
+    .article-carousel-control { width: 3rem; height: 4rem; }
+  }
+</style>
+
+<script>
+  import EmblaCarousel from 'embla-carousel';
+  import PhotoSwipeLightbox from 'photoswipe/lightbox';
+  import 'photoswipe/style.css';
+
+  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((carousel) => {
+    const viewport = carousel.querySelector<HTMLElement>('.article-carousel-viewport');
+    const slides = [...carousel.querySelectorAll<HTMLElement>('[data-slide]')];
+    const dots = carousel.querySelector<HTMLElement>('[data-dots]');
+    const caption = carousel.querySelector<HTMLElement>('.article-carousel-caption[data-caption]');
+    if (!viewport) return;
+
+    carousel.querySelectorAll<HTMLAnchorElement>('.article-carousel-image').forEach((trigger) => {
+      const image = trigger.querySelector<HTMLImageElement>('img');
+      if (!image) return;
+
+      const syncDimensions = () => {
+        if (image.naturalWidth && image.naturalHeight) {
+          trigger.dataset.pswpWidth = String(image.naturalWidth);
+          trigger.dataset.pswpHeight = String(image.naturalHeight);
+        }
+      };
+
+      image.addEventListener('load', syncDimensions, { once: true });
+      syncDimensions();
+    });
+
+    const lightbox = new PhotoSwipeLightbox({
+      gallery: carousel,
+      children: '.article-carousel-image',
+      pswpModule: () => import('photoswipe'),
+    });
+    lightbox.on('uiRegister', () => {
+      const pswp = lightbox.pswp;
+      if (!pswp?.ui) return;
+      pswp.ui.registerElement({
+        name: 'custom-caption',
+        order: 9,
+        isButton: false,
+        appendTo: 'root',
+        html: '',
+        onInit: (element, pswp) => {
+          const updateCaption = () => {
+            const source = pswp.currSlide?.data.element as HTMLElement | undefined;
+            element.textContent = source?.dataset.caption ?? '';
+          };
+          pswp.on('change', updateCaption);
+          updateCaption();
+        },
+      });
+    });
+    lightbox.init();
+
+    const embla = EmblaCarousel(viewport, { loop: true });
+    const render = () => {
+      const activeIndex = embla.selectedScrollSnap();
+      slides.forEach((slide, index) => slide.setAttribute('aria-hidden', String(index !== activeIndex)));
+      if (dots) dots.querySelectorAll('button').forEach((dot, index) => dot.setAttribute('aria-current', String(index === activeIndex)));
+      if (caption) caption.textContent = slides[activeIndex]?.dataset.caption ?? '';
+    };
+    slides.forEach((_, index) => {
+      const dot = document.createElement('button');
+      dot.type = 'button'; dot.ariaLabel = `Show image ${index + 1}`;
+      dot.addEventListener('click', () => embla.scrollTo(index));
+      dots?.append(dot);
+    });
+    carousel.querySelector('[data-previous]')?.addEventListener('click', () => embla.scrollPrev());
+    carousel.querySelector('[data-next]')?.addEventListener('click', () => embla.scrollNext());
+    carousel.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') embla.scrollPrev();
+      if (event.key === 'ArrowRight') embla.scrollNext();
+    });
+    embla.on('select', render);
+    render();
+  });
+</script>

@@ -1,0 +1,75 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  caption?: string;
+  width?: number;
+  height?: number;
+}
+
+const { src, alt, caption, width = 1600, height = 1000 } = Astro.props;
+---
+
+<figure class="article-image not-prose" data-pswp-gallery>
+  <a class="article-image-trigger" href={src} data-pswp-width={width} data-pswp-height={height} data-caption={caption ?? ''} target="_blank" rel="noreferrer" aria-label={`Open ${alt} in full screen`}>
+    <img src={src} alt={alt} loading="lazy" />
+    <span class="article-image-fullscreen" aria-hidden="true">+</span>
+  </a>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .article-image { margin: 2rem 0; }
+  .article-image-trigger { position: relative; display: block; width: 100%; cursor: zoom-in; }
+  .article-image-trigger img { display: block; width: 100%; max-height: 34rem; object-fit: cover; border: 1px solid hsl(var(--border)); border-radius: 0.75rem; }
+  .article-image-fullscreen { position: absolute; right: 0.75rem; bottom: 0.75rem; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 999px; background: hsl(var(--bg) / 0.8); color: hsl(var(--fg-dark)); font-size: 1.4rem; line-height: 1; opacity: 0.9; }
+  figcaption { margin-top: 0.6rem; color: hsl(var(--fg-light)); font-size: 0.8rem; text-align: center; }
+  :global(.pswp__button--zoom) { display: none !important; }
+  :global(.pswp__custom-caption) { position: absolute; right: 1rem; bottom: 1rem; left: 1rem; z-index: 10000; max-width: 48rem; margin: auto; padding: 0.65rem 1rem; border-radius: 0.35rem; background: hsl(0 0% 0% / 0.65); color: white; font-size: 0.9rem; line-height: 1.4; text-align: center; pointer-events: none; }
+</style>
+
+<script>
+  import PhotoSwipeLightbox from 'photoswipe/lightbox';
+  import 'photoswipe/style.css';
+
+  document.querySelectorAll<HTMLElement>('[data-pswp-gallery]').forEach((gallery) => {
+    gallery.querySelectorAll<HTMLAnchorElement>('.article-image-trigger').forEach((trigger) => {
+      const image = trigger.querySelector<HTMLImageElement>('img');
+      if (!image) return;
+
+      const syncDimensions = () => {
+        if (image.naturalWidth && image.naturalHeight) {
+          trigger.dataset.pswpWidth = String(image.naturalWidth);
+          trigger.dataset.pswpHeight = String(image.naturalHeight);
+        }
+      };
+
+      image.addEventListener('load', syncDimensions, { once: true });
+      syncDimensions();
+    });
+
+    const lightbox = new PhotoSwipeLightbox({
+      gallery,
+      children: 'a',
+      pswpModule: () => import('photoswipe'),
+    });
+    lightbox.on('uiRegister', () => {
+      lightbox.pswp?.ui?.registerElement({
+        name: 'custom-caption',
+        order: 9,
+        isButton: false,
+        appendTo: 'root',
+        html: '',
+        onInit: (element, pswp) => {
+          const updateCaption = () => {
+            const source = pswp.currSlide?.data.element as HTMLElement | undefined;
+            element.textContent = source?.dataset.caption ?? '';
+          };
+          pswp.on('change', updateCaption);
+          updateCaption();
+        },
+      });
+    });
+    lightbox.init();
+  });
+</script>
