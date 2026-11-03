@@ -5,5 +5,5 @@ publishedAt: 2026-06-19
 tags: ["C", "Cortex-M", "Embedded", "Computer Architecture"]
 ---
 
-Comming soon...
+Coming soon...
 

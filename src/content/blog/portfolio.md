@@ -7,5 +7,5 @@ tags: ["Web", "Google Cloud"]
 
 Welcome to my website! This is my very first blog post. In this article, we will explore the technologies used to develop it (mainly **Astro** and **SolidJS**) and how it is hosted on **Google Cloud**.
 
-Blog comming soon...
+Blog coming soon...
 

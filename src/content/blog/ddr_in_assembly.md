@@ -5,5 +5,5 @@ publishedAt: 2026-06-21
 tags: ["Assembly", "Analog Video", "PWM", "Video Game", "Hardware", "PIC16f1789", "Embedded"]
 ---
 
-Comming soon...
+Coming soon...
 
